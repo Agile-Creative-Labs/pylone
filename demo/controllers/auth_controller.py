@@ -28,7 +28,7 @@ class AuthController:
                 return Response("<h1>Login Failed</h1><p>Invalid username or password.</p>", status=401)
 
         # Display the login form
-        return Response("""
+        return Response("""<html><head><title> Form </title> </head><body>
             <h1>Login</h1>
             <form method="POST">
                 <label for="username">Username:</label>
@@ -37,7 +37,7 @@ class AuthController:
                 <input type="password" id="password" name="password" required><br>
                 <button type="submit">Login</button>
             </form>
-            <p>Don't have an account? <a href="/register">Register here</a>.</p>
+            <p>Don't have an account? <a href="/register">Register here</a>.</p></body></html>
         """)
 
     def register(self, request):

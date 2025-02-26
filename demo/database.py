@@ -17,9 +17,9 @@ class Database:
         conn = None
         try:
             conn = sqlite3.connect(self.db_file)
-            logging.debug("Connection to SQLite DB successful")
+            logging.debug("DemoDB Connection to SQLite DB successful")
         except Error as e:
-            logging.error(f"Error connecting to SQLite DB: {e}")
+            logging.error(f"DemoDB Error connecting to SQLite DB: {e}")
         return conn
 
     def create_table(self):
@@ -34,9 +34,9 @@ class Database:
                 );
             """)
             self.conn.commit()
-            logging.debug("Users table created or already exists")
+            logging.debug("DemoDB Users table created or already exists")
         except Error as e:
-            logging.error(f"Error creating users table: {e}")
+            logging.error(f"DemoDB Error creating users table: {e}")
 
     def add_user(self, username, password):
         """Add a new user to the database."""
@@ -44,34 +44,34 @@ class Database:
             cursor = self.conn.cursor()
             cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
             self.conn.commit()
-            logging.debug(f"User '{username}' added successfully")
+            logging.debug(f"DemoDB User '{username}' added successfully")
         except Error as e:
-            logging.error(f"Error adding user: {e}")
+            logging.error(f"DemoDB Error adding user: {e}")
 
     def get_user(self, username):
         """Retrieve a user from the database by username."""
         try:
             cursor = self.conn.cursor()
-            logging.debug(f"Executing query: SELECT * FROM users WHERE username = ?")
+            logging.debug(f"DemoDB Executing query: SELECT * FROM users WHERE username = ?")
             cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
             user = cursor.fetchone()
-            logging.debug(f"Retrieved user: {user}")
+            logging.debug(f"DemoDB Retrieved user: {user}")
             return user
         except Error as e:
-            logging.error(f"Error retrieving user: {e}")
+            logging.error(f"DemoDB Error retrieving user: {e}")
             return None
     
     def get_user_by_id(self, user_id):
         """Retrieve a user from the database by user ID."""
         try:
             cursor = self.conn.cursor()
-            logging.debug(f"Executing query: SELECT * FROM users WHERE id = {user_id}")
+            logging.debug(f"DemoDB Executing query: SELECT * FROM users WHERE id = {user_id}")
             cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
             user = cursor.fetchone()
-            logging.debug(f"Retrieved user: {user}")
+            logging.debug(f"DemoDB Retrieved user: {user}")
             return user
         except Error as e:
-            logging.error(f"Error retrieving user: {e}")
+            logging.error(f"DemoDB Error retrieving user: {e}")
             return None
 
     def get_all_users(self):
@@ -80,10 +80,10 @@ class Database:
             cursor = self.conn.cursor()
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
-            logging.debug(f"Retrieved {len(users)} users")
+            logging.debug(f"DemoDB Retrieved {len(users)} users")
             return users
         except Error as e:
-            logging.error(f"Error retrieving users: {e}")
+            logging.error(f"DemoDB Error retrieving users: {e}")
             return []
 
     def update_user(self, user_id, username, password):
@@ -92,9 +92,9 @@ class Database:
             cursor = self.conn.cursor()
             cursor.execute("UPDATE users SET username = ?, password = ? WHERE id = ?", (username, password, user_id))
             self.conn.commit()
-            logging.debug(f"User {user_id} updated successfully")
+            logging.debug(f"DemoDB User {user_id} updated successfully")
         except Error as e:
-            logging.error(f"Error updating user: {e}")
+            logging.error(f"DemoDB Error updating user: {e}")
 
     def delete_user(self, user_id):
         """Delete a user from the database."""
@@ -102,15 +102,15 @@ class Database:
             cursor = self.conn.cursor()
             cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
             self.conn.commit()
-            logging.debug(f"User {user_id} deleted successfully")
+            logging.debug(f"DemoDB User {user_id} deleted successfully")
         except Error as e:
-            logging.error(f"Error deleting user: {e}")
+            logging.error(f"DemoDB Error deleting user: {e}")
 
     def close(self):
         """Close the database connection."""
         if self.conn:
             self.conn.close()
-            logging.debug("Database connection closed")
+            logging.debug("DemoDB Database connection closed")
 
 # Initialize the database when this module is imported
 db = Database()

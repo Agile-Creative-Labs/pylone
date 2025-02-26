@@ -4,8 +4,7 @@ import logging
 from wsgiref.simple_server import make_server
 from demo.app import app
 
-# Setup logging
-logging.basicConfig(level=logging.DEBUG)
+
 
 # Fancy Open-Source Banner
 BANNER = r"""
@@ -16,10 +15,13 @@ BANNER = r"""
 ██║     ╚██████  ╔╝███████╗╚██████╔╝██║ ╚████║███████╗
 ╚═╝      ╚══██═══╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
 Pylone Framework v1.0 (c) 2025 Agile Creative Labs Inc
-MIT License | Open Source & Free | Built with 🖖 by Starfleet Engineers
+Apache License | Open Source & Free | Built with 🖖 by Starfleet Engineers
 """
 
 print(BANNER)
+
+# Setup logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Global server variable
 server = None

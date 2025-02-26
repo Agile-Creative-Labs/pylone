@@ -1,0 +1,38 @@
+
+TODO
+
+1.utilise and test the following
+1.1 session.validate_csrf_token in all forms for CSRF Protection
+1.2 ratelimit_middleware class
+1.3 template class 
+
+2. Ensure all user input is validated (e.g., email addresses, passwords).
+3. Always serve your application over HTTPS to encrypt data in transit.
+4. Log security-related events and monitor for suspicious activity.
+5. 
+
+Built in Features to Implement
+1. Caching: Implement caching mechanisms to improve performance by storing frequently accessed data in memory.
+2. Asynchronous Request Handling: Consider adding support for asynchronous request handling (e.g., using asyncio) 
+to improve performance and scalability.
+3. WebSockets Support: If you want to enable real-time communication in your applications, 
+add support for WebSockets.
+4. Security Features: Include built-in security features like protection against Cross-Site Request Forgery (CSRF), 
+Cross-Site Scripting (XSS), and other common web vulnerabilities.
+5. ORM
+6. Multiple DB support e.g. Mysql
+
+Add Ons
+1. Form Handling
+2. Input Validation
+
+Developer Experience:
+
+1.Command-Line Interface (CLI): Create a CLI to help developers with common tasks like creating new projects, 
+generating code templates, running tests, and managing migrations.
+2.Testing Utilities: Provide tools and conventions for writing unit tests and integration tests. 
+This will encourage developers to write testable code and improve the overall quality of their applications.
+3.Configuration Management: Make it easy to configure the framework and its various components. 
+Support different configuration formats (e.g., YAML, JSON, INI) or allow developers to use Python code for configuration.
+4.Documentation: Invest in creating comprehensive and easy-to-understand documentation 
+for your framework. This is essential for attracting users and helping them get started quickly.

@@ -3,6 +3,7 @@ from pylone.request import Request
 from pylone.middleware import Middleware
 import logging
 import sys
+import os
 
 class App:
     def __init__(self, router=None, middlewares=None):
@@ -21,7 +22,7 @@ class App:
         self.router = router
 
     def handle_request(self, environ, start_response):
-        raise Exception("Simulated critical error")
+        #raise Exception("Simulated critical error")
         """
         Handle an incoming HTTP request.
 
@@ -39,9 +40,9 @@ class App:
             start_response(status, headers)  # Start the WSGI response
             return body  # Return the response body
         except Exception as e:
-            logging.error(f"Critical error handling request: {e}")
-            logging.error("Exiting the program due to a critical error.")
-            sys.exit(1)  # Exit the program with a non-zero status code
+            logging.error(f"APP -> Critical error handling request: {e}")
+           
+            os._exit(1)  # Forcefully terminate the program
 
     def __call__(self, environ, start_response):
         """WSGI interface: makes the App instance callable."""
@@ -54,6 +55,5 @@ class App:
             # Call the wrapped app
             return app(environ, start_response)
         except Exception as e:
-            logging.error(f"Critical error in middleware or app: {e}")
-            logging.error("Exiting the program due to a critical error.")
-            sys.exit(1)  # Exit the program with a non-zero status code
+            logging.error(f"APP -> Critical error in middleware or app: {e} Exiting Pylone ...")
+            os._exit(1)  # Forcefully terminate the program
