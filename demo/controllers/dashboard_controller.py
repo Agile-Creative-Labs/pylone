@@ -35,6 +35,7 @@ def dashboard(request):
     return Response(f"""
         <h1>Dashboard</h1>
         <p>Welcome to your dashboard!</p>
+         <p><a href="/logout">Logout</a></p>  <!-- Logout link -->
         <h2>User List</h2>
         <table border="1">
             <tr>
@@ -101,3 +102,10 @@ def delete_user_page(request, user_id):
     """Handles the delete user action."""
     db.delete_user(user_id)  # Use the database instance
     return Response("", status=302, headers=[("Location", "/dashboard")])
+
+def logout(request):
+    """Handles the logout action."""
+    session_id = request.cookies.get("session_id")
+    if session_id:
+        session_manager.delete_session(session_id)  # Delete the session
+    return Response("", status=302, headers=[("Location", "/login")])  # Redirect to login page
