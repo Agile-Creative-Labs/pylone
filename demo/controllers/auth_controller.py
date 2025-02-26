@@ -19,14 +19,19 @@ def login(request):
             # Create a session for the user
             session_id = session_manager.create_session(user[0])  # user[0] is the user ID
             # Redirect to the dashboard with a session cookie
-            return Response("", status=302, headers=[("Location", "/dashboard")], cookies={"session_id": session_id})
+            return Response(
+                "",
+                status=302,
+                headers=[("Location", "/dashboard")],  # Ensure headers is a list of tuples
+                cookies={"session_id": session_id}
+            )
         else:
             return Response("<h1>Login Failed</h1><p>Invalid username or password.</p>", status=401)
 
     # Display the login form
     return Response("""
         <h1>Login</h1>
-        <form method="POST" action="/login">
+        <form method="POST">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br>
             <label for="password">Password:</label>
@@ -35,8 +40,8 @@ def login(request):
         </form>
         <p>Don't have an account? <a href="/register">Register here</a>.</p>
     """)
-
 def register(request):
+
     """Handles the registration page."""
     if request.method == "POST":
         username = request.get("username")

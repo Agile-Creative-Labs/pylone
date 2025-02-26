@@ -1,4 +1,8 @@
 import sqlite3
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
 
 class Database:
     def __init__(self, db_path="database.db"):
@@ -39,5 +43,11 @@ class Database:
             return False
 
     def get_user(self, username):
-        """Retrieves user details by username."""
-        return self.execute("SELECT * FROM users WHERE username = ?", (username,), fetchone=True)
+        """Retrieve a user from the database by username."""
+        try:
+            return self.execute("SELECT * FROM users WHERE username = ?", (username,), fetchone=True)
+        except sqlite3.Error as e:
+            logging.error(f"Error retrieving user: {e}")
+            return None
+
+  
