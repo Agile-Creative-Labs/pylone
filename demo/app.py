@@ -1,20 +1,15 @@
-from pylone.router import Router
-from pylone.request import Request
-from pylone.response import Response
-from pylone.template import TemplateEngine
+# demo/app.py
+from pylone.app import App
+from demo.routes import router
 
-app = Router()
-template_engine = TemplateEngine("demo/templates")
+app = App()
+app.setup(router)
 
-def form_page(request):
-    return Response(template_engine.render("form.html"))
+# Debugging: Print registered routes
+print("Debug: Routes registered in demo/app.py")
+for path, route in router.routes.items():
+    print(f"  - {path} -> {route['handler'].__name__}")
 
-def result_page(request):
-    name = request.query_params.get("name", [""])[0]
-    return Response(template_engine.render("result.html", {"user_name": name}))
-
-app.add_route("/", form_page)
-app.add_route("/result", result_page, methods=['GET'])
 
 
 
