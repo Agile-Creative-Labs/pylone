@@ -6,7 +6,9 @@ from demo.controllers.dashboard_controller import dashboard
 router = Router()
 
 # Define routes and map them to controllers
-router.add_route("/", login, methods=["GET"])  # Default route to login page
-router.add_route("/login", login, methods=["GET"])
-router.add_route("/register", register, methods=["GET"])
+router.add_route("/", login, methods=["GET", "POST"])  # Default route to login page
+router.add_route("/login", login, methods=["GET", "POST"])
+router.add_route("/register", register, methods=["GET", "POST"])
 router.add_route("/dashboard", dashboard, methods=["GET"])
+
+

@@ -18,3 +18,10 @@ class TemplateEngine:
             content = content.replace("{{ " + key + " }}", str(value))
 
         return content
+    
+    def render_template(template, context):
+        with open(template, "r") as file:
+            content = file.read()
+            for key, value in context.items():
+                content = content.replace(f"{{{{ {key} }}}}", str(value))
+            return content

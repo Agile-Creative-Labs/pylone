@@ -4,5 +4,5 @@ from .router import Router
 from .request import Request
 from .response import Response
 from .template import TemplateEngine
-from .session import SessionManager
+from .session import Session
 from .database import Database
