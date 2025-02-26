@@ -1,4 +1,5 @@
 import logging
+import sys
 
 class LoggingMiddleware:
     def __init__(self, app):
@@ -21,15 +22,20 @@ class LoggingMiddleware:
         Returns:
             The response body as an iterable.
         """
-        # Log the request
-        logging.info(f"Logging Middleware Request-> {environ['REQUEST_METHOD']} {environ['PATH_INFO']}")
+        try:
+            # Log the request
+            logging.info(f"Request: {environ['REQUEST_METHOD']} {environ['PATH_INFO']}")
 
-        # Call the next middleware or the app
-        def custom_start_response(status, headers, exc_info=None):
-            # Log the response status
-            logging.info(f"Logging Middleware Request-> {status}")
-            return start_response(status, headers, exc_info)
+            # Call the next middleware or the app
+            def custom_start_response(status, headers, exc_info=None):
+                # Log the response status
+                logging.info(f"Response: {status}")
+                return start_response(status, headers, exc_info)
 
-        response = self.app(environ, custom_start_response)
+            response = self.app(environ, custom_start_response)
 
-        return response
+            return response
+        except Exception as e:
+            logging.error(f"Critical error in LoggingMiddleware: {e}")
+            logging.error("Exiting the program due to a critical error.")
+            sys.exit(1)  # Exit the program with a non-zero status code
