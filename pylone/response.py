@@ -6,6 +6,8 @@ class Response:
 
     def to_wsgi(self):
         """Convert the response to a WSGI-compatible format."""
-        self.headers['Content-Type'] = 'text/html; charset=utf-8'
-        return self.status, list(self.headers.items()), [self.body.encode('utf-8')]
-
+        # Ensure headers are a list of tuples
+        headers = self.headers if isinstance(self.headers, list) else list(self.headers.items())
+        # Ensure body is an iterable (e.g., a list of bytes)
+        body = [self.body.encode('utf-8')] if isinstance(self.body, str) else self.body
+        return self.status, headers, body
