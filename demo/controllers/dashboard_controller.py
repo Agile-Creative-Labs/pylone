@@ -2,12 +2,10 @@
 #def dashboard(request):
 #    """Handles the dashboard page."""
 #    return Response(template_engine.render("dashboard.html"))
-import logging
+
+from demo.database import db  # Import the database instance
 from pylone.response import Response
 from pylone.session import session_manager
-from demo.database import create_connection, get_user, add_user, update_user, delete_user, get_all_users, get_user_by_id
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
 
 def dashboard(request):
     """Handles the dashboard page."""
@@ -18,9 +16,7 @@ def dashboard(request):
         # Redirect to login if no valid session
         return Response("", status=302, headers=[("Location", "/login")])
 
-    conn = create_connection()
-    users = get_all_users(conn)  # Get all users from the database
-    conn.close()
+    users = db.get_all_users()  # Use the database instance
 
     # Render the dashboard with the list of users
     user_list = "".join(
@@ -57,9 +53,7 @@ def add_user_page(request):
     if request.method == "POST":
         username = request.get("username")
         password = request.get("password")
-        conn = create_connection()
-        add_user(conn, username, password)
-        conn.close()
+        db.add_user(username, password)  # Use the database instance
         return Response("", status=302, headers=[("Location", "/dashboard")])
 
     # Display the add user form
@@ -78,21 +72,15 @@ def add_user_page(request):
 
 def edit_user_page(request, user_id):
     """Handles the edit user page."""
-    logging.debug(f"Editing user with ID: {user_id}")
-    conn = create_connection()
-    user = get_user_by_id(conn, user_id)
-    conn.close()
+    user = db.get_user_by_id(user_id)  # Use the database instance
 
     if not user:
-        logging.error(f"User with ID {user_id} not found")
         return Response("<h1>User Not Found</h1>", status=404)
-    logging.debug(f"Retrieved user: {user}")
+
     if request.method == "POST":
         username = request.get("username")
         password = request.get("password")
-        conn = create_connection()
-        update_user(conn, user_id, username, password)
-        conn.close()
+        db.update_user(user_id, username, password)  # Use the database instance
         return Response("", status=302, headers=[("Location", "/dashboard")])
 
     # Display the edit user form
@@ -111,7 +99,5 @@ def edit_user_page(request, user_id):
 
 def delete_user_page(request, user_id):
     """Handles the delete user action."""
-    conn = create_connection()
-    delete_user(conn, user_id)
-    conn.close()
+    db.delete_user(user_id)  # Use the database instance
     return Response("", status=302, headers=[("Location", "/dashboard")])

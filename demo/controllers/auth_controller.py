@@ -1,19 +1,13 @@
-import logging
+from demo.database import db  # Import the database instance
 from pylone.response import Response
 from pylone.session import session_manager
-from demo.database import create_connection, add_user, get_user
-
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
 
 def login(request):
     """Handles the login page."""
     if request.method == "POST":
         username = request.get("username")
         password = request.get("password")
-        conn = create_connection()
-        user = get_user(conn, username)
-        conn.close()
+        user = db.get_user(username)  # Use the database instance
 
         if user and user[2] == password:  # Check if password matches
             # Create a session for the user
@@ -22,7 +16,7 @@ def login(request):
             return Response(
                 "",
                 status=302,
-                headers=[("Location", "/dashboard")],  # Ensure headers is a list of tuples
+                headers=[("Location", "/dashboard")],
                 cookies={"session_id": session_id}
             )
         else:
@@ -40,18 +34,13 @@ def login(request):
         </form>
         <p>Don't have an account? <a href="/register">Register here</a>.</p>
     """)
-def register(request):
 
+def register(request):
     """Handles the registration page."""
     if request.method == "POST":
         username = request.get("username")
         password = request.get("password")
-        if not username or not password:
-            return Response("<h1>Registration Failed</h1><p>Username and password are required.</p>", status=400)
-
-        conn = create_connection()
-        add_user(conn, username, password)
-        conn.close()
+        db.add_user(username, password)  # Use the database instance
         return Response(f"<h1>Registration Successful!</h1><p>Welcome, {username}!</p>")
 
     # Display the registration form
