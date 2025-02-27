@@ -1,6 +1,7 @@
 import sys
 import signal
 import logging
+import argparse
 from wsgiref.simple_server import make_server
 from demo.app import app
 
@@ -20,8 +21,15 @@ Apache License | Open Source & Free | Built with 🖖 by Starfleet Engineers
 
 print(BANNER)
 
+# Command-line argument parser
+parser = argparse.ArgumentParser(description="Run the Pylone web server.")
+parser.add_argument("-p", "--port", type=int, default=8000, help="Port to run the server on (default: 8000)")
+parser.add_argument("--debug", action="store_true", help="Enable debug mode")
+args = parser.parse_args()
+
 # Setup logging
-logging.basicConfig(level=logging.DEBUG)
+log_level = logging.DEBUG if args.debug else logging.INFO
+logging.basicConfig(level=log_level)
 
 # Global server variable
 server = None

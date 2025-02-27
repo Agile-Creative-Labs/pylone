@@ -1,10 +1,24 @@
+"""
+demo/controllers/auth_controller.py
+
+@TODO: 
+instead of dynamically generating the html tags use the template engine and the html files from /demo/templates/ 
+for both methods login and register
+"""
+
 from demo.database import db  # Import the database instance
 from pylone.response import Response
 from pylone.session import session_manager
+from pylone.template import TemplateEngine  # Import the template engine
 import logging
+import os
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
+
+# Initialize TemplateEngine with the templates directory
+TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "../templates/")
+template_engine = TemplateEngine(TEMPLATES_DIR)
 
 class AuthController:
     def login(self, request):
@@ -12,7 +26,7 @@ class AuthController:
         if request.method == "POST":
             username = request.get("username")
             password = request.get("password")
-            user = db.get_user(username)  # Use the database instance
+            user = db.get_user(username)  # Fetch user from DB
 
             if user and user[2] == password:  # Check if password matches
                 # Create a session for the user
@@ -25,41 +39,26 @@ class AuthController:
                     cookies={"session_id": session_id}
                 )
             else:
-                return Response("<h1>Login Failed</h1><p>Invalid username or password.</p>", status=401)
-
-        # Display the login form
-        return Response("""<html><head><title> Form </title> </head><body>
-            <h1>Login</h1>
-            <form method="POST">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required><br>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required><br>
-                <button type="submit">Login</button>
-            </form>
-            <p>Don't have an account? <a href="/register">Register here</a>.</p></body></html>
-        """)
+                # Re-render login page with an error message
+                context = {"error": "Invalid username or password."}
+                return Response(template_engine.render("login.html", context), status=401)
+        
+        # Render login form
+        return Response(template_engine.render("login.html"))
 
     def register(self, request):
         """Handles the registration page."""
         if request.method == "POST":
             username = request.get("username")
             password = request.get("password")
-            db.add_user(username, password)  # Use the database instance
-            return Response(f"<h1>Registration Successful!</h1><p>Welcome, {username}!</p>")
+            db.add_user(username, password)  # Save user to DB
 
-        # Display the registration form
-        return Response("""
-            <h1>Register</h1>
-            <form method="POST">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required><br>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required><br>
-                <button type="submit">Register</button>
-            </form>
-            <p>Already have an account? <a href="/login">Login here</a>.</p>
-        """)
+            # Render success message in register page
+            context = {"message": f"Welcome, {username}! Registration successful."}
+            return Response(template_engine.render("register.html", context))
+
+        # Render register form
+        return Response(template_engine.render("register.html"))
 
 # Create an instance of the AuthController
 auth_controller = AuthController()

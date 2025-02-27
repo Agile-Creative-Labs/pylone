@@ -1,10 +1,42 @@
+""" pylone/router.py 
+
+
+
+Example Static File URLs
+/static/css/style.css → Serves demo/static/css/style.css
+/static/js/app.js → Serves demo/static/js/app.js
+/static/images/logo.png → Serves demo/static/images/logo.png
+"""
+
 import re
+import os
 import logging
 from pylone.response import Response
 
 logging.basicConfig(level=logging.DEBUG)
 
 class Router:
+    STATIC_DIR = "demo/static"  # Path to the static directory
+
+    MIME_TYPES = {
+        ".html": "text/html",
+        ".css": "text/css",
+        ".js": "application/javascript",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".gif": "image/gif",
+        ".svg": "image/svg+xml",
+        ".ico": "image/x-icon",
+        ".woff": "font/woff",
+        ".woff2": "font/woff2",
+        ".ttf": "font/ttf",
+        ".otf": "font/otf",
+        ".eot": "application/vnd.ms-fontobject",
+        ".json": "application/json",
+        ".txt": "text/plain"
+    }
+
     def __init__(self):
         """Initialize the router with an empty routes dictionary."""
         self.routes = {}
@@ -37,6 +69,10 @@ class Router:
         method = request.method
         logging.debug(f"ROUTER Resolving request-> {method} {path}")
 
+        # Serve static files if the request is for /static/*
+        if path.startswith("/static/"):
+            return self.serve_static_file(path)
+
         # Check if the path matches any route
         for route_path, route in self.routes.items():
             match = route["pattern"].match(path)
@@ -60,4 +96,32 @@ class Router:
 
         # Route not found
         logging.warning(f"ROUTER 404 Not Found: {method} {path}")
+        return Response("ROUTER 404 Not Found", status=404)
+
+    def serve_static_file(self, path):
+        """
+        Serve a static file from the static directory.
+
+        Args:
+            path (str): The request path starting with /static/
+
+        Returns:
+            Response: A response containing the file content or a 404 error.
+        """
+        file_path = os.path.join(self.STATIC_DIR, path.lstrip("/"))  # Remove leading "/"
+
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            _, ext = os.path.splitext(file_path)
+            content_type = self.MIME_TYPES.get(ext, "application/octet-stream")
+
+            try:
+                with open(file_path, "rb") as file:
+                    content = file.read()
+                logging.debug(f"STATIC FILE SERVED: {file_path}")
+                return Response(content, status=200, content_type=content_type)
+            except Exception as e:
+                logging.error(f"STATIC FILE ERROR: Unable to read {file_path}: {e}")
+                return Response("ROUTER 500 Internal Server Error", status=500)
+
+        logging.warning(f"STATIC FILE NOT FOUND: {file_path}")
         return Response("ROUTER 404 Not Found", status=404)

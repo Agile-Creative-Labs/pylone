@@ -1,3 +1,7 @@
+""" pylone/template.py
+
+"""
+
 import os
 
 class TemplateEngine:
