@@ -3,56 +3,46 @@
 #    """Handles the dashboard page."""
 #    return Response(template_engine.render("dashboard.html"))
 
-from demo.database import db  # Import the database instance
+import logging
 from pylone.response import Response
 from pylone.session import session_manager
+from pylone.template import TemplateEngine   # Ensure this imports Jinja2 template engine
 import logging
+import os
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
+# Initialize TemplateEngine with the templates directory
+TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "../templates/")
+template_engine = TemplateEngine(TEMPLATES_DIR)
+
 class DashboardController:
+    def __init__(self, template_engine):
+        self.template_engine = template_engine
+
     def dashboard(self, request):
         """Handles the dashboard page."""
+        logging.debug("Handling dashboard request")
+
+        # Get user session
         session_id = request.cookies.get("session_id")
-        session = session_manager.get_session(session_id)
+        user_id = session_manager.get_session(session_id)
 
-        if not session:
-            # Redirect to login if no valid session
-            return Response("", status=302, headers=[("Location", "/login")])
+        if not user_id:
+            logging.debug("No active session, redirecting to login.")
+            return Response("", status=302, headers={"Location": "/login"})
 
-        users = db.get_all_users()  # Use the database instance
+        # Mock user details (In real case, fetch from DB)
+        user_data = {"id": user_id, "username": "JohnDoe"}
 
-        # Render the dashboard with the list of users
-        user_list = "".join(
-            f"""
-            <tr>
-                <td>{user[1]}</td>
-                <td>{user[2]}</td>
-                <td>
-                    <a href="/edit_user/{user[0]}">Edit</a> |
-                    <a href="/delete_user/{user[0]}">Delete</a>
-                </td>
-            </tr>
-            """ for user in users
-        )
+        return Response(self.template_engine.render("private/dashboard.html", {
+            "title": "Dashboard",
+            "user": user_data
+        }), status=200)
 
-        return Response(f"""
-            <h1>Dashboard</h1>
-            <p>Welcome to your dashboard!</p>
-            <p><a href="/logout">Logout</a></p>  <!-- Logout link -->
-            <h2>User List</h2>
-            <table border="1">
-                <tr>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Actions</th>
-                </tr>
-                {user_list}
-            </table>
-            <br>
-            <a href="/add_user">Add New User</a>
-        """)
+
+
 
     def add_user_page(self, request):
         """Handles the add user page."""
@@ -75,8 +65,30 @@ class DashboardController:
             <br>
             <a href="/dashboard">Back to Dashboard</a>
         """)
-
     def edit_user_page(self, request, user_id):
+        """Handles the edit user page."""
+        user = db.get_user_by_id(user_id)  # Use the database instance
+
+        if not user:
+            return Response("<h1>User Not Found</h1>", status=404)
+
+        if request.method == "POST":
+            username = request.get("username")
+            password = request.get("password")
+            db.update_user(user_id, username, password)  # Use the database instance
+            return Response("", status=302, headers=[("Location", "/dashboard")])
+
+        # Render the edit user form
+        context = {
+            'user_id': user_id,
+            'username': user[1],
+            'password': user[2],
+            'dashboard_url': '/dashboard'
+        }
+        edit_user_html = self.template_engine.render('edit_user.html', context)
+        return Response(edit_user_html, status=200)
+    
+    def ___edit_user_page(self, request, user_id):
         """Handles the edit user page."""
         user = db.get_user_by_id(user_id)  # Use the database instance
 
@@ -115,5 +127,6 @@ class DashboardController:
             session_manager.delete_session(session_id)  # Delete the session
         return Response("", status=302, headers=[("Location", "/login")])  # Redirect to login page
 
-# Create an instance of the DashboardController
-dashboard_controller = DashboardController()
+
+# Create an instance of DashboardController
+dashboard_controller = DashboardController(template_engine)

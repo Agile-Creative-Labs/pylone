@@ -1,84 +1,49 @@
-/* General Styles */
+/* static/css/styles.css */
+
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
     text-align: center;
 }
 
-h1 {
+.login-container h2 {
+    margin-bottom: 20px;
     color: #333;
 }
 
-a {
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-}
-
-a:hover {
-    color: #0056b3;
-}
-
-/* Form Styles */
-form {
-    background: white;
-    padding: 20px;
-    max-width: 400px;
-    margin: 20px auto;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-input {
+.login-container input {
     width: 100%;
     padding: 10px;
-    margin: 5px 0 10px 0;
+    margin: 10px 0;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.login-container button {
     width: 100%;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Dashboard */
-.dashboard {
-    max-width: 600px;
-    margin: 20px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.logout-btn {
-    display: block;
-    background-color: #dc3545;
-    color: white;
     padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    margin-top: 20px;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-.logout-btn:hover {
-    background-color: #c82333;
+.login-container button:hover {
+    background-color: #0056b3;
 }

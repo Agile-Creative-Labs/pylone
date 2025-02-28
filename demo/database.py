@@ -1,14 +1,16 @@
 import sqlite3
 from sqlite3 import Error
 import logging
+from demo.settings import config  # Import the loaded configuration
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
 class Database:
-    def __init__(self, db_file="users.db"):
+    def __init__(self):
         """Initialize the database connection and create tables."""
-        self.db_file = db_file
+       # self.db_file = db_file
+        self.db_file = config.DB_NAME
         self.conn = self.create_connection()
         self.create_table()
 
@@ -37,8 +39,21 @@ class Database:
             logging.debug("DemoDB Users table created or already exists")
         except Error as e:
             logging.error(f"DemoDB Error creating users table: {e}")
-
+    
     def add_user(self, username, password):
+        """Add a new user to the database."""
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            self.conn.commit()
+            logging.debug(f"DemoDB User '{username}' added successfully")
+            return True  # ✅ Return True if successful
+        except Error as e:
+            logging.error(f"DemoDB Error adding user: {e}")
+            return False  # ✅ Return False if an error occurs
+
+
+    def tadd_user(self, username, password):
         """Add a new user to the database."""
         try:
             cursor = self.conn.cursor()
@@ -47,6 +62,19 @@ class Database:
             logging.debug(f"DemoDB User '{username}' added successfully")
         except Error as e:
             logging.error(f"DemoDB Error adding user: {e}")
+    
+    def xadd_user(username, password):
+        """Adds a user to the database."""
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        try:
+            cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            self.conn.commit()
+            conn.close()
+            return True  # Return only one value
+        except sqlite3.IntegrityError:
+            conn.close()
+            return False
 
     def get_user(self, username):
         """Retrieve a user from the database by username."""

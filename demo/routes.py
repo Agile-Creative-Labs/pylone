@@ -14,3 +14,4 @@ router.add_route("/add_user", dashboard_controller.add_user_page, methods=["GET"
 router.add_route("/edit_user/<int:user_id>", dashboard_controller.edit_user_page, methods=["GET", "POST"])
 router.add_route("/delete_user/<int:user_id>", dashboard_controller.delete_user_page, methods=["GET"])
 router.add_route("/logout", dashboard_controller.logout, methods=["GET"])  # Logout route
+router.add_route("/demo", auth_controller.demo, methods=["GET"])  # Demo route
