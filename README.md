@@ -10,7 +10,7 @@ Pylone is a lightweight, custom Python MVC (Model-View-Controller) framework des
 - Configuration Management: Centralized configuration system for environment-specific settings.
 - Extensible: Easily extendable with custom middleware, controllers, and models.
 - Jinja2 Engine
-- Built-in Sockets
+- Built-in Sockets, Ajax support
 
 ## Getting Started
 
