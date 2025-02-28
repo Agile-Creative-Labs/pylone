@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<h1>AJAX Demo</h1>
+<button id="fetch-data">Fetch Data</button>
+<div id="result"></div>
+<div id="loading" style="display: none;">Loading...</div>
+<div id="error" style="display: none; color: red;">An error occurred. Please try again.</div>
+{% endblock %}

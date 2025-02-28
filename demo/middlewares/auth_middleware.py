@@ -26,7 +26,19 @@ class AuthMiddleware:
         session_id = environ.get("HTTP_COOKIE", "").split("session_id=")[-1].split(";")[0]
         session = session_manager.get_session(session_id)
 
-        if not session and environ["PATH_INFO"] not in ["/login", "/register", "/demo"]:
+        if not session and environ["PATH_INFO"] not in ["/login", 
+            "/register",
+             "/demo", 
+             "/ajax-demo",
+             "/ajax/data",
+             "/test-json"
+             "/test_response_object",
+             "/test-raw-tuple",
+             "/test_response_object",
+             "/test_json_object",
+             "/text-text-response",
+             "/text-invalid-response"
+             ]:
             # Redirect to login if not authenticated
             start_response("302 Found", [("Location", "/login")])
             return [b"Redirecting to login..."]
