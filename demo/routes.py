@@ -3,7 +3,7 @@ from pylone.router import Router
 from demo.controllers.auth_controller import auth_controller
 from demo.controllers.dashboard_controller import dashboard_controller
 from demo.controllers.ajax_controller import ajax_controller
-#from demo.controllers.test_controller import test_controller
+from demo.controllers.test_controller import TestController
 
 # Create a router
 router = Router()
@@ -34,13 +34,13 @@ router.add_route(AJAX_DEMO_ROUTE, ajax_controller.ajax_demo, methods=["GET"])  #
 router.add_route("/test-json", ajax_controller.test_json_response, methods=["GET"])
 
 # Mock tests
-"""
-    router.add_route("/test-response-object", test_controller.test_response_object, methods=["GET"])
-    router.add_route("/test-raw-tuple", test_controller.test_raw_tuple, methods=["GET"])
-    router.add_route("/test-json-response", test_controller.test_json_response, methods=["GET"])
-    router.add_route("/test-text-response", test_controller.test_text_response, methods=["GET"])
-    router.add_route("/test-invalid-response", test_controller.test_invalid_response, methods=["GET"])
-"""
+test_controller = TestController()
+router.add_route("/test-response-object", test_controller.test_response_object, methods=["GET"])
+router.add_route("/test-raw-tuple", test_controller.test_raw_tuple, methods=["GET"])
+router.add_route("/test-json", test_controller.test_json_response, methods=["GET"])
+router.add_route("/test-text", test_controller.test_text_response, methods=["GET"])
+router.add_route("/test-raw-bytes", test_controller.test_raw_bytes_response, methods=["GET"])
+router.add_route("/test-invalid", test_controller.test_invalid_response, methods=["GET"])
 
 # Fallback route for 404 errors
 #TODO: Implement this router.add_route("/404", error_controller.not_found, methods=["GET"])

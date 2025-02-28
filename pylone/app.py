@@ -113,6 +113,7 @@ class App:
                 - headers (list): A list of (key, value) header tuples.
                 - body (str or bytes): The response body.
         """
+        logging.debug(f"Processing response of type: {type(response)}")
         if hasattr(response, "to_wsgi"):
             # Case 1: Response object with a to_wsgi() method
             status, headers, body = response.to_wsgi()
