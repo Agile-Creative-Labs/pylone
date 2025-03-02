@@ -1,3 +1,26 @@
+"""
+Logging Middleware for a Python WSGI Application.
+
+This module provides a middleware class, LoggingMiddleware, that wraps a WSGI
+application to log incoming requests and outgoing responses. It logs the request
+method and path, as well as the response status. In case of critical errors, it
+logs the error and forcefully terminates the program.
+
+Imports:
+    logging: For logging messages.
+    sys: For system-specific parameters and functions (not directly used here, but potentially needed for more advanced logging).
+    os: For operating system interfaces, used here to forcefully terminate the program on critical errors.
+
+Classes:
+    LoggingMiddleware: A WSGI middleware that logs requests and responses.
+
+Functions:
+    None.
+    
+ Author: Agile Creative Labs Inc.
+ Version: 1.0.0
+ Date: 02/23/2024
+"""
 import logging
 import sys
 import os

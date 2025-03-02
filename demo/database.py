@@ -1,3 +1,28 @@
+"""
+Database Module for Demo Application.
+
+This module provides a Database class that handles SQLite database operations
+for the demo application. It initializes a database connection, creates the
+users table if it doesn't exist, and provides methods for interacting with
+the database.
+
+Imports:
+    sqlite3: For interacting with SQLite databases.
+    sqlite3.Error: For handling SQLite database errors.
+    logging: For logging messages.
+    demo.settings.config: For accessing configuration settings, including the database name.
+
+Classes:
+    Database: Handles SQLite database operations.
+
+Functions:
+    None.
+
+ Author: Agile Creative Labs Inc.
+ Version: 1.0.0
+ Date: 02/23/2024
+"""
+
 import sqlite3
 from sqlite3 import Error
 import logging

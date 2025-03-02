@@ -1,12 +1,29 @@
 """
-   
-    Added a list of allowed paths that do not require authentication,
-    Improved session handling to avoid errors,
-    Added logging for better debugging.
+Authentication Middleware for Pylone Web Framework.
 
+This module provides the AuthMiddleware class, which handles user
+authentication for a WSGI application. It checks for a valid session ID
+in the request cookies and redirects unauthenticated users to the login
+page. It also defines a list of allowed paths that do not require
+authentication.
+
+Imports:
+    pylone.session.session_manager: The session manager for handling user sessions.
+    logging: For logging messages.
+
+Classes:
+    AuthMiddleware: Middleware for handling user authentication.
+
+Functions:
+    None.
+
+ Author: Agile Creative Labs Inc.
+ Version: 1.0.0
+ Date: 02/23/2024
 """
 
 from pylone.session import session_manager
+from demo.settings import config
 import logging
 
 class AuthMiddleware:
@@ -19,20 +36,8 @@ class AuthMiddleware:
         """
         self.app = app
         # List of paths that do not require authentication
-        self.allowed_paths = [
-            "/login",
-            "/register",
-            "/demo",
-            "/ajax-demo",
-            "/ajax/data",
-            "/test-json",
-            "/test-response-object",
-            "/test-raw-tuple",
-            "/test-json-response",
-            "/test-text-response",
-            "/test-invalid-response",
-            "/test-raw-bytes",
-        ]
+        self.allowed_paths = config.ALLOWED_PATHS
+        logging.debug(f"AuthMiddleware: Public paths has been loaded..")
 
     def __call__(self, environ, start_response):
         """

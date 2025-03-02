@@ -1,14 +1,13 @@
 """
-    demo/staticfile_middleware.py
+demo/staticfile_middleware.py
     Middleware for serving static files in a WSGI application.
-
-    This middleware intercepts requests for static files (e.g., CSS, JS, images) and serves them
+        This middleware intercepts requests for static files (e.g., CSS, JS, images) and serves them
     directly from a specified directory. It handles file existence checks, MIME type detection,
     and proper HTTP headers for caching and security.
-"""
 # Author: alex@agilecreativelabs.ca
 # Date: Thu Feb 27, 2025
 # Copyright: Copyright (c) 2025 Agile Creative Labs Inc
+"""
 import os
 import mimetypes
 from http import HTTPStatus

@@ -1,12 +1,24 @@
 """
+Rate Limiting Middleware for a Python WSGI Application.
 
-Usage:
+This module provides a middleware class, RateLimitingMiddleware, that wraps a WSGI
+application to limit the number of requests from a specific client IP within a
+defined time window. It prevents excessive requests and protects against
+brute-force attacks.
 
-demo/app.py
+Imports:
+    time: For handling timestamps and time-related operations.
+    collections.defaultdict: For creating dictionaries with default values.
+    logging: For logging messages (not used in current code, but can be added for logging rate limiting events).
 
-    from demo.middlewares.rate_limiting_middleware import RateLimitingMiddleware
-    # Create the app with middlewares
-    app = App(router, middlewares=[LoggingMiddleware, RateLimitingMiddleware])
+Classes:
+    RateLimitingMiddleware: A WSGI middleware that limits request rates.
+
+Functions:
+    None.
+ * Author: Agile Creative Labs Inc.
+ * Version: 1.0.0
+ * Date: 02/23/2024
 """
 import time
 from collections import defaultdict

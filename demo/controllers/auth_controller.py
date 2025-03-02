@@ -1,10 +1,29 @@
 """
-demo/controllers/auth_controller.py
+Authentication Controller for Pylone Web Framework.
 
-@TODO: 
-instead of dynamically generating the html tags use the template engine and the html files from /demo/templates/ 
-for both methods login and register
+This module provides the AuthController class, which handles user authentication
+and authorization functionalities, including login, logout, registration, and
+a demo page with mock data.
+
+Imports:
+    demo.database.db: The database instance for user management.
+    pylone.response.Response: The response object for creating HTTP responses.
+    pylone.session.session_manager: The session manager for handling user sessions.
+    pylone.template.TemplateEngine: The template engine for rendering HTML templates.
+    logging: For logging messages.
+    os: For interacting with the operating system (e.g., file paths).
+
+Classes:
+    AuthController: Handles user authentication and authorization.
+
+Functions:
+    None.
+
+ Author: Agile Creative Labs Inc.
+ Version: 1.0.0
+ Date: 02/22/2024
 """
+
 
 from demo.database import db  # Import the database instance
 from pylone.response import Response

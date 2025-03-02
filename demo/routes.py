@@ -1,3 +1,25 @@
+"""
+Routing Configuration for Demo Application.
+
+This module defines the URL routing for the demo application using the
+pylone.router.Router class. It maps URL paths to corresponding controller
+methods, handling authentication, dashboard, AJAX, and test functionalities.
+
+Imports:
+    pylone.router.Router: The router class for handling URL routing.
+    demo.controllers.auth_controller.auth_controller: The authentication controller instance.
+    demo.controllers.dashboard_controller.dashboard_controller: The dashboard controller instance.
+    demo.controllers.ajax_controller.ajax_controller: The AJAX controller instance.
+    demo.controllers.test_controller.TestController: The test controller class.
+
+Usage:
+    - This module should be imported to initialize the URL routing for the application.
+
+Author: Agile Creative Labs Inc
+Date: 2024-06-25 (Replace with today's date)
+Version: 1.0
+"""
+
 #demo/routes.py
 from pylone.router import Router
 from demo.controllers.auth_controller import auth_controller
@@ -41,6 +63,7 @@ router.add_route("/test-json", test_controller.test_json_response, methods=["GET
 router.add_route("/test-text", test_controller.test_text_response, methods=["GET"])
 router.add_route("/test-raw-bytes", test_controller.test_raw_bytes_response, methods=["GET"])
 router.add_route("/test-invalid", test_controller.test_invalid_response, methods=["GET"])
+router.add_route("/test-links",test_controller.links, methods=["GET"])
 
 # Fallback route for 404 errors
 #TODO: Implement this router.add_route("/404", error_controller.not_found, methods=["GET"])

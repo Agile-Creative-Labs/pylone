@@ -1,8 +1,28 @@
-#template_engine = TemplateEngine(os.path.join(os.path.dirname(__file__), "../templates"))
-#def dashboard(request):
-#    """Handles the dashboard page."""
-#    return Response(template_engine.render("dashboard.html"))
+"""
+Dashboard Controller for Pylone Web Framework.
 
+This module provides the DashboardController class, which handles user
+dashboard functionalities, including displaying the dashboard, adding,
+editing, and deleting users, and logging out.
+
+Imports:
+    logging: For logging messages.
+    pylone.response.Response: The response object for creating HTTP responses.
+    pylone.session.session_manager: The session manager for handling user sessions.
+    pylone.template.TemplateEngine: The template engine for rendering HTML templates.
+    os: For interacting with the operating system (e.g., file paths).
+    demo.database.db: The database instance for user management.
+
+Classes:
+    DashboardController: Handles user dashboard functionalities.
+
+Functions:
+    None.
+
+ Author: Agile Creative Labs Inc.
+ Version: 1.0.0
+ Date: 02/23/2024
+"""
 import logging
 from pylone.response import Response
 from pylone.session import session_manager
@@ -40,9 +60,6 @@ class DashboardController:
             "title": "Dashboard",
             "user": user_data
         }), status=200)
-
-
-
 
     def add_user_page(self, request):
         """Handles the add user page."""

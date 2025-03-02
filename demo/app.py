@@ -1,22 +1,28 @@
-# demo/app.py
-# Description: This script initializes and configures the Pylone web application folder named 'demo'
-#              including setting up routes and applying middleware.
-# Author: alex@agilecreativelabs.ca
-# Date: Thu Feb 27, 2025
-# Copyright: Copyright (c) 2025 Agile Creative Labs Inc
-#              All rights reserved.
-#
-# Licensed under the [License Name, e.g., MIT License] (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    [License URL or reference]
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+"""
+Application Setup Module for Demo Application.
+
+This module initializes and configures the main WSGI application for the
+demo application. It sets up logging, determines the static file directory,
+creates the base application instance, and wraps it with necessary
+middleware components.
+
+Imports:
+    demo.middlewares.staticfile_middleware.StaticFileMiddleware: Middleware for serving static files.
+    demo.settings.config: Configuration settings for the application.
+    logging: For logging messages.
+    os: For interacting with the operating system (e.g., file paths).
+    pylone.app.App: The main application class.
+    pylone.router.router: The router instance for handling URL routing.
+    demo.middlewares.logging_middleware.LoggingMiddleware: Middleware for logging requests and responses.
+    demo.middlewares.auth_middleware.AuthMiddleware: Middleware for handling authentication.
+
+Usage:
+    - This module should be executed to initialize the application before running the WSGI server.
+
+Author: Agile Creative Labs Inc
+Date: 2024-06-25 
+Version: 1.0
+"""
 
 import os
 from whitenoise import WhiteNoise

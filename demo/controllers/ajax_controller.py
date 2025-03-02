@@ -1,3 +1,29 @@
+"""
+Ajax Controller for Pylone Web Framework.
+
+This module provides the AjaxController class, which handles AJAX requests and
+renders the AJAX demo page. It demonstrates how to return JSON responses,
+fetch data, and use the template engine to render HTML pages.
+
+Imports:
+    demo.database.db: The database instance from the demo application.
+    pylone.response.Response: The response object for creating HTTP responses.
+    pylone.session.session_manager: The session manager for handling user sessions.
+    pylone.template.TemplateEngine: The template engine for rendering HTML templates.
+    logging: For logging messages.
+    os: For interacting with the operating system (e.g., file paths).
+    json: For encoding and decoding JSON data.
+
+Classes:
+    AjaxController: Handles AJAX requests and renders the AJAX demo page.
+
+Functions:
+    None.
+    
+ Author: Agile Creative Labs Inc.
+ Version: 1.0.0
+ Date: 02/23/2024
+"""
 from demo.database import db  # Import the database instance
 from pylone.response import Response
 from pylone.session import session_manager
