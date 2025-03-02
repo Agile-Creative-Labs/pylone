@@ -10,17 +10,18 @@
 {% if error %}
 <p style="color: red;">{{ error }}</p>
 {% endif %}
-
+<div class="login-container">
 <form method="POST">
     <label for="username">Username:</label>
-    <input type="text" name="username" required><br>
+    <input type="text" class="form-control mb-3" name="username" required><br>
 
     <label for="password">Password:</label>
-    <input type="password" name="password" required><br>
+    <input type="password" class="form-control mb-3" name="password" required><br>
 
     <button type="submit">Register</button>
 </form>
 <a href="/login"> Login </a>
+</div>
 {% endblock %}
 
 

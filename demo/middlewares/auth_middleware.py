@@ -52,7 +52,10 @@ class AuthMiddleware:
         if path in self.allowed_paths:
             logging.debug(f"AuthMiddleware: Allowing access to path -> {path}")
             return self.app(environ, start_response)
-
+        # Allow access to static files without authentication
+        if path.startswith("/static/"):
+            logging.debug(f"AuthMiddleware: Allowing access to static file -> {path}")
+            return self.app(environ, start_response)
         # Check if the user is authenticated
         cookies = environ.get("HTTP_COOKIE", "")
         session_id = None
