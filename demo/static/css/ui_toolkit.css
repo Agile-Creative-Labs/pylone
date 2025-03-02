@@ -1,0 +1,203 @@
+ /* Apple-inspired UI styles */
+ :root {
+    --pylone-primary: #007AFF; /* iOS Blue */
+    --pylone-success: #34C759; /* Apple Green */
+    --pylone-error: #FF3B30;   /* Apple Red */
+    --pylone-warning: #FF9500; /* Apple Orange */
+    --pylone-bg: rgba(255, 255, 255, 0.8);
+    --pylone-text: #333;
+    --pylone-border-radius: 12px;
+    --pylone-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --pylone-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Base container for notifications */
+#pylone-ui-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+}
+
+/* Toast notifications */
+.pylone-toast {
+    background: var(--pylone-bg);
+    color: var(--pylone-text);
+    padding: 14px 20px;
+    border-radius: var(--pylone-border-radius);
+    font-family: var(--pylone-font);
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--pylone-shadow);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.pylone-toast-success { background: var(--pylone-success); color: white; }
+.pylone-toast-error { background: var(--pylone-error); color: white; }
+.pylone-toast-warning { background: var(--pylone-warning); color: white; }
+.pylone-toast-info { background: var(--pylone-primary); color: white; }
+
+/* Dialog Overlay */
+.pylone-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+/* Dialog Box */
+.pylone-dialog {
+    background: var(--pylone-bg);
+    color: var(--pylone-text);
+    padding: 20px;
+    border-radius: var(--pylone-border-radius);
+    box-shadow: var(--pylone-shadow);
+    text-align: center;
+    min-width: 300px;
+    font-family: var(--pylone-font);
+    backdrop-filter: blur(20px);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Dialog Header */
+.pylone-dialog h3 {
+    margin-top: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Dialog Body */
+.pylone-dialog p {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Input Field */
+.pylone-dialog input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: var(--pylone-font);
+    font-size: 14px;
+}
+
+/* Buttons */
+.pylone-dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pylone-dialog-buttons button {
+    padding: 10px 16px;
+    border-radius: var(--pylone-border-radius);
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.pylone-dialog-buttons button:first-child {
+    background: #e5e5ea;
+    color: black;
+}
+
+.pylone-dialog-buttons button:last-child {
+    background: var(--pylone-primary);
+    color: white;
+}
+
+.pylone-dialog-buttons button:hover {
+    filter: brightness(1.1);
+}
+
+
+/* Notification container */
+#pylone-ui-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+}
+
+/* Notification styling */
+.pylone-toast {
+    background: var(--pylone-bg);
+    color: var(--pylone-text);
+    padding: 14px 20px;
+    border-radius: var(--pylone-border-radius);
+    font-family: var(--pylone-font);
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--pylone-shadow);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Color Variants */
+.pylone-toast-success { background: var(--pylone-success); color: white; }
+.pylone-toast-error { background: var(--pylone-error); color: white; }
+.pylone-toast-warning { background: var(--pylone-warning); color: white; }
+.pylone-toast-info { background: var(--pylone-primary); color: white; }
+
+/* end notif */
+/* Fade Out Animation */
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Notification fade-out
+.fade-out {
+    animation: fadeOut 0.3s forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.pylone-toast {
+    animation: slideIn 0.3s ease-out;
+}
+ */

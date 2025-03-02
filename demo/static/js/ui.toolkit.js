@@ -1,31 +1,3 @@
-/**
- * PyloneUI - A simple, Apple-style UI notification and dialog system.
- *
- * This class provides methods to display toast notifications, alert dialogs,
- * confirm dialogs, and prompt dialogs with customizable messages and actions.
- *
- * Features:
- * - Apple-style aesthetics for notifications and dialogs.
- * - Customizable notification types (success, error, warning, info).
- * - Auto-removal of toast notifications after a specified duration.
- * - Support for alert, confirm, and prompt dialogs with callbacks.
- * - Flexible dialog creation with customizable buttons and input fields.
- *
- * Usage:
- * const Pylone = new PyloneUI();
- * Pylone.showToast("Message", { type: "success", duration: 3000 });
- * Pylone.showAlert("Message", () => { ... });
- * Pylone.showConfirm("Message", () => { ... }, () => { ... });
- * Pylone.showPrompt("Message", (input) => { ... }, "Placeholder");
- * Pylone.showNotification("Message","warning", 4000);
- *
- * Dependencies:
- * - None (vanilla JavaScript)
- *
- * Author: Agile Creative Labs Inc.
- * Version: 1.0.0
- * Date: 02/23/2024
- */
 class PyloneUI 
 {
     constructor()
