@@ -24,18 +24,22 @@ from pylone.app import App
 from demo.routes import router
 from demo.middlewares.logging_middleware import LoggingMiddleware
 from demo.middlewares.auth_middleware import AuthMiddleware
+from demo.middlewares.staticfile_middleware import StaticFileMiddleware
 from demo.settings import config  # Import the config object
+import logging
+
 
 # Determine the path to the static directory
 static_dir = os.path.join(os.path.dirname(__file__), 'static')
+logging.info(f"Static directory: {static_dir}")  # Add this line
 
-# Create the app with middlewares
-app = App(
-    router,
-    middlewares=[
-        LoggingMiddleware,  # Logging middleware
-        AuthMiddleware,     # Authentication middleware
-    ]
-)
+# Create the base app
+app = App(router)
 
+# Setup the app (call setup before wrapping with middlewares)
 app.setup(router)
+
+# Wrap the app with middlewares
+app = LoggingMiddleware(app)  
+app = StaticFileMiddleware(app, static_dir=static_dir)  
+app = AuthMiddleware(app)  
