@@ -1,3 +1,30 @@
+"""pylone/run.py
+
+This script starts the Pylone web server using the wsgiref.simple_server.
+It provides command-line arguments for configuring the server port and debug mode.
+It also includes a graceful shutdown mechanism using signal handling.
+
+Key features:
+    - Command-line argument parsing for port and debug mode.
+    - WSGI server startup using wsgiref.simple_server.
+    - Graceful shutdown on CTRL+C (SIGINT).
+    - Logging configuration based on debug mode.
+    - Display of a fancy banner.
+
+Usage:
+    Run the server with default settings:
+    >>> python run.py
+
+    Run the server on a custom port:
+    >>> python run.py -p 9000
+
+    Run the server in debug mode:
+    >>> python run.py --debug
+
+    Date Created: February 26, 2025
+    Author: alex@agilecreativelabs.ca
+    Copyright: © 2025 Agile Creative Labs Inc.
+"""
 import sys
 import signal
 import logging

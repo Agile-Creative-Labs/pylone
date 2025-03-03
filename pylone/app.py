@@ -1,3 +1,11 @@
+"""
+    The main application class for handling HTTP requests in the Pylone MVC framework.
+    This class acts as a WSGI application, handling requests, resolving routes, 
+    processing responses, and ensuring WSGI-compliant output.
+    Date Created: December 12, 2024
+    Author: cooper@agilecreativelabs.ca
+    Copyright: © 2025 Agile Creative Labs Inc.
+"""
 import os
 import json
 import logging
@@ -12,12 +20,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "../templates/")
 
 class App:
-    """
-        The main application class for handling HTTP requests in the Pylone MVC framework.
-        This class acts as a WSGI application, handling requests, resolving routes, 
-        processing responses, and ensuring WSGI-compliant output.
-    
-    """
     def __init__(self, router=None, middlewares=None, templates_dir=None):
         """
         Initialize the application with a router and middlewares.

@@ -1,11 +1,41 @@
 """ pylone/router.py 
 
 
+This module implements a Router class for handling HTTP requests and routing them
+to appropriate handlers. It supports dynamic route parameters, static file serving,
+and method-based routing.
+
+Key features:
+    - Route registration with dynamic parameter handling using regular expressions.
+    - Method-based routing (e.g., GET, POST).
+    - Static file serving from a specified directory.
+    - MIME type detection for static files.
+    - Error handling and logging.
+
+Usage:
+    Initialize a Router instance:
+    >>> router = Router()
+
+    Add a route with a handler:
+    >>> def my_handler(request, param1, param2):
+    ...     return Response(f"Params: {param1}, {param2}")
+    >>> router.add_route("/path/<param1>/<param2>", my_handler)
+
+    Resolve a request:
+    >>> request = Request("GET", "/path/value1/value2")
+    >>> response = router.resolve(request)
+
+    Serve static files:
+    Place static files in the 'demo/static' directory, and access them via '/static/'.
 
 Example Static File URLs
 /static/css/style.css → Serves demo/static/css/style.css
 /static/js/app.js → Serves demo/static/js/app.js
 /static/images/logo.png → Serves demo/static/images/logo.png
+
+    Date Created: February 26, 2025
+    Author: alex@agilecreativelabs.ca
+    Copyright: © 2025 Agile Creative Labs Inc.
 """
 
 import re

@@ -1,3 +1,33 @@
+"""pylone/request.py
+
+This module defines the Request class, which encapsulates HTTP request data
+from a WSGI environment. It provides methods to access request method, path,
+headers, cookies, and form data.
+
+Key features:
+    - Initialization from a WSGI environment dictionary.
+    - Extraction of HTTP method and path.
+    - Parsing of HTTP headers and cookies.
+    - Parsing of form data from POST requests.
+    - A 'get' method for retrieving form data values.
+
+Usage:
+    Create a Request object from a WSGI environment:
+    >>> request = Request(environ)
+
+    Access request attributes:
+    >>> method = request.method
+    >>> path = request.path
+    >>> cookies = request.cookies
+    >>> form_data = request.form_data
+
+    Retrieve form data:
+    >>> value = request.get('key', 'default_value')
+
+    Date Created: December 12, 2024
+    Author: cooper@agilecreativelabs.ca
+    Copyright: © 2025 Agile Creative Labs Inc.
+"""
 import logging
 
 class Request:

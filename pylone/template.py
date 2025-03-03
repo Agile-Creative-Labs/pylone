@@ -1,5 +1,30 @@
-""" pylone/template.py
+"""pylone/template.py
 
+This module provides a TemplateEngine class for rendering Jinja2 templates.
+
+It encapsulates the Jinja2 environment setup, allowing for easy template
+loading and rendering with optional context. It also includes methods for
+generating WSGI-compliant responses from rendered templates, suitable for
+web applications.
+
+Key features:
+    - Initialization of a Jinja2 Environment with file system loader and autoescaping.
+    - Template rendering with context handling and error logging.
+    - Generation of WSGI-compliant responses with rendered template content.
+
+Usage:
+    Initialize a TemplateEngine with a directory containing templates:
+    >>> engine = TemplateEngine("templates")
+
+    Render a template with a context:
+    >>> rendered_output = engine.render("index.html", {"name": "User"})
+
+    Generate a WSGI-compliant response:
+    >>> body, status, headers = engine.render_template("page.html", {"data": "content"})
+    
+    Date Created: February 26, 2025
+    Author: alex@agilecreativelabs.ca
+    Copyright: © 2025 Agile Creative Labs Inc.
 """
 import os
 import logging

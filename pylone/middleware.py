@@ -1,3 +1,32 @@
+"""pylone/middleware.py
+
+This module provides a base Middleware class for wrapping WSGI applications.
+It allows for pre-processing and post-processing of requests and responses,
+enabling features like logging, authentication, and header manipulation.
+
+Key features:
+    - Initialization with a WSGI application.
+    - Callable interface for WSGI compatibility.
+    - Pre-processing and post-processing hooks.
+    - Base class for creating custom middleware.
+
+Usage:
+    Create a custom middleware by inheriting from Middleware and overriding
+    the pre_process and post_process methods:
+
+    >>> class LoggingMiddleware(Middleware):
+    ...     def pre_process(self, environ):
+    ...         logging.info(f"Request: {environ['REQUEST_METHOD']} {environ['PATH_INFO']}")
+    ...     def post_process(self, environ, response):
+    ...         logging.info(f"Response: {environ['PATH_INFO']}")
+
+    Wrap a WSGI application with the middleware:
+    >>> app = LoggingMiddleware(your_wsgi_app)
+    
+    Date Created: December 12, 2024
+    Author: cooper@agilecreativelabs.ca
+    Copyright: © 2025 Agile Creative Labs Inc.
+"""
 class Middleware:
     def __init__(self, app):
         """

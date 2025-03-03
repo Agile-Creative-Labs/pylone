@@ -1,3 +1,37 @@
+"""pylone/response.py
+
+This module defines the Response class, which encapsulates HTTP responses for
+a WSGI application. It handles various response body types, status codes,
+headers, and cookies, and provides a method to convert the response to a
+WSGI-compatible format.
+
+Key features:
+    - Initialization with body, status, headers, and cookies.
+    - Automatic status message generation from status code.
+    - Cookie handling and inclusion in headers.
+    - JSON serialization for dictionary bodies.
+    - String encoding for HTML or plain text bodies.
+    - Support for iterable byte bodies.
+    - Logging of response details.
+    - Conversion to WSGI-compatible (status, headers, body) tuple.
+
+Usage:
+    Create a Response object:
+    >>> response = Response("Hello, World!", status=200, headers={"Content-Type": "text/plain"})
+
+    Create a JSON response:
+    >>> response = Response({"message": "Success"}, status=200)
+
+    Create a response with cookies:
+    >>> response = Response("Cookie set!", status=200, cookies={"session_id": "12345"})
+
+    Convert to WSGI format:
+    >>> status, headers, body = response.to_wsgi()
+
+    Date Created: February 26, 2025
+    Author: alex@agilecreativelabs.ca
+    Copyright: © 2025 Agile Creative Labs Inc.
+"""
 import logging
 import json
 
