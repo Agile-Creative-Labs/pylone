@@ -1,12 +1,127 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1>Test demo links</h1>
-<table border="1">
-    <tr><td>Login</td> <td><a href="/"> Login </a></td> </tr>
-    <tr><td>Register</td><td><a href="/register"> Register </a></td> </tr>
-    <tr><td>Dashboard</td><td><a href="/dashboard"> Dashboard </a></td> </tr>
-    <tr><td>Ajax Data</td><td><a href="/ajax/data"> Data </a></td> </tr>
-    <tr> <td>Ajax Demo</td><td><a href="/ajax-demo"> Ajax </a></td> </tr>
+<table border="1" style="width: 80%; margin: 20px auto; border-collapse: collapse;">
+  <thead>
+    <tr>
+      <th style="padding: 10px; text-align: left;">Feature</th>
+      <th style="padding: 10px; text-align: left;">Link/Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px;">Login</td>
+      <td style="padding: 10px;"><a href="/">Login</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">Register</td>
+      <td style="padding: 10px;"><a href="/register">Register</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">Dashboard</td>
+      <td style="padding: 10px;"><a href="/dashboard">Dashboard</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">Ajax Data</td>
+      <td style="padding: 10px;"><a href="/ajax/data">Data</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">Ajax Demo</td>
+      <td style="padding: 10px;"><a href="/ajax-demo">Ajax</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;"><strong>Support for diff response types<strong></td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">response object</td>
+      <td style="padding: 10px;"><a href="/test-response-object">Ajax</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">response raw tuple</td>
+      <td style="padding: 10px;"><a href="/test-raw-tuple">Ajax</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">response json</td>
+      <td style="padding: 10px;"><a href="/test-json">Ajax</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">response text</td>
+      <td style="padding: 10px;"><a href="/test-text">Ajax</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">response raw bytes</td>
+      <td style="padding: 10px;"><a href="/test-raw-bytes">Ajax</a></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;"><strong>Built in UI Dialog helpers</strong></td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showToast('This is a success toast!', { type: 'success' })">Show Success Toast</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showToast('This is an error toast!', { type: 'error' })">Show Error Toast</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showToast('This is a warning toast!', { type: 'warning' })">Show Warning Toast</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showToast('This is an info toast!')">Show Info Toast</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showAlert('This is an alert message.')">Show Alert</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showConfirm('Are you sure?', () => console.log('Confirmed'), () => console.log('Cancelled'))">Show Confirm</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showPrompt('Enter your name:', (name) => console.log('Name:', name), 'Your name')">Show Prompt</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showNotification('This is a success notification','success')">Success Notification</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showNotification('This is a error notification','error',5000)">Error Notification</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showNotification('This is a warning notification','warning',4000)">Warning Notification</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;">
+        <button onclick="window.Pylone.showNotification('This is a info notification','info')">Info Notification</button>
+      </td>
+      <td style="padding: 10px;"></td>
+    </tr>
+  </tbody>
 </table>
 {% endblock %}

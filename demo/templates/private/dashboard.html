@@ -9,19 +9,6 @@
 {% extends "private_base.html" %}
 {% block private_content %}
 <h1>Dashboard</h1>
-<h1>Built UI helpers</h1>
-     <button onclick="window.Pylone.showToast('This is a success toast!', { type: 'success' })">Show Success Toast</button>
-    <button onclick="window.Pylone.showToast('This is an error toast!', { type: 'error' })">Show Error Toast</button>
-    <button onclick="window.Pylone.showToast('This is a warning toast!', { type: 'warning' })">Show Warning Toast</button>
-    <button onclick="window.Pylone.showToast('This is an info toast!')">Show Info Toast</button>
-
-    <button onclick="window.Pylone.showAlert('This is an alert message.')">Show Alert</button>
-    <button onclick="window.Pylone.showConfirm('Are you sure?', () => console.log('Confirmed'), () => console.log('Cancelled'))">Show Confirm</button>
-    <button onclick="window.Pylone.showPrompt('Enter your name:', (name) => console.log('Name:', name), 'Your name')">Show Prompt</button>
-    <button onclick="window.Pylone.showNotification('This is a success notification','success')">Success Notification</button>
-    <button onclick="window.Pylone.showNotification('This is a error notification','error',5000)">Error Notification</button>
-    <button onclick="window.Pylone.showNotification('This is a warning notification','warning',4000)">Warning Notification</button>
-    <button onclick="window.Pylone.showNotification('This is a info notification','info')">Info Notification</button>
 
 {% endblock %}
 
