@@ -29,6 +29,7 @@ class DevelopmentConfig(Config):
     DB_NAME = os.getenv('DB_NAME', 'demo.db')  # Default to 'demo.db' if not set
     DATABASE_URI = f"sqlite:///{DB_NAME}"  # Use DB_NAME to construct the DATABASE_URI
     ALLOWED_PATHS = [
+            "/",
             "/login",
             "/register",
             "/demo",

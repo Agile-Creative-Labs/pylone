@@ -62,3 +62,5 @@ class LoggingMiddleware:
         except Exception as e:
             logging.error(f"LoggingMiddleware Critical error -> {e}")
             os._exit(1)  # Forcefully terminate the program
+
+            

@@ -31,7 +31,8 @@ from pylone.session import session_manager
 from pylone.template import TemplateEngine  # Import the template engine
 import logging
 import os
-
+import json
+import traceback
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -58,8 +59,11 @@ class AuthController:
 
         # Render the demo.html template with the mock data
         return Response(self.template_engine.render("public/demo.html", {"title": "Demo Page", "crew": mock_data}))
+ 
+    def welcome(self, request):
+        return Response(self.template_engine.render("public/welcome.html", {"error": ""}))
 
-    def login(self, request):
+    def __login(self, request):
         """Handles the login page."""
         if request.method == "POST":
             username = request.get("username")
@@ -122,5 +126,215 @@ class AuthController:
 
         return Response("", status=302, headers={"Location": "/login"}, cookies={"session_id": ""})
 
+    def auth(self, request):
+        """Handles the login page."""
+        if request.method == "POST":
+            username = request.get("username")
+            password = request.get("password")
+            user = db.get_user(username)  # Fetch user from DB
+
+            if user and user[2] == password:  # Check if password matches
+                # Create a session for the user
+                session_id = session_manager.create_session(user[0])  # user[0] is the user ID
+
+                # Respond with JSON including the redirect URL
+                return Response(
+                    {"message": "Login successful!", "redirect": "/dashboard"},
+                    status=200,
+                    headers={"Content-Type": "application/json"},
+                    cookies={"session_id": session_id}
+                    )
+            else:
+                # Return JSON error response
+                return Response(
+                    {"error": "Invalid username or password."},
+                    status=401,
+                    headers={"Content-Type": "application/json"}
+                )
+    
+        # Return an error for unsupported methods
+        return Response(
+            {"error": "Unsupported request method."},
+            status=405,
+            headers={"Content-Type": "application/json"}
+        )
+
+    def ____login(self, request):
+        """Handles the login page and login requests."""
+        if request.method == "POST":
+            try:
+                # Access the request body correctly
+                request_body = request.get_body()  # Use the correct method to get the body
+                if not request_body:
+                    logging.error("Empty request body for POST /login")
+                    return self.json_response({"error": "Empty request body."}, status=400)
+
+                # Explicitly parse JSON payload
+                request_data = json.loads(request_body.decode("utf-8"))
+                username = request_data.get("username")
+                password = request_data.get("password")
+
+                logging.debug(f"POST Request Data: Username: {username}")
+
+                if not username or not password:
+                    return self.json_response({"error": "Username and password are required."}, status=400)
+
+                # Validate user credentials
+                user = db.get_user(username)
+                if user and len(user) >= 3 and self.verify_password(password, user[2]):
+                    session_id = session_manager.create_session(user[0])
+                    return self.json_response({"message": "Login successful!", "redirect": "/dashboard"}, status=200)
+
+                return self.json_response({"error": "Invalid username or password."}, status=401)
+            except json.JSONDecodeError:
+                logging.error("Invalid JSON in request body")
+                return self.json_response({"error": "Invalid JSON format."}, status=400)
+            except Exception as e:
+                logging.error(f"Error in login: {e}")
+                logging.error(traceback.format_exc())
+                return self.json_response({"error": "Internal server error."}, status=500)
+
+        elif request.method == "GET":
+            return Response(
+                self.template_engine.render("public/login.html", {"error": ""}),
+                headers={"Content-Type": "text/html"}
+            )
+
+        return self.json_response({"error": "Method not allowed."}, status=405)
+
+    def _json_response(self, data, status=200):
+        response = {
+            'status': status,
+            'data': data,
+        }
+        return json.dumps(response), status, {'Content-Type': 'application/json'}
+    def json_response(self, data, status=200):
+        return Response(body=data, status=status, headers={"Content-Type": "application/json"})
+
+    def verify_password(self, input_password, stored_password):
+        # Implement password hashing and verification logic here
+        return input_password == stored_password  # Placeholder: Replace with actual verification
+
+    def vlogin(self, request):
+        """Handles the login page and login requests."""
+        if request.method == "POST":
+            try:
+                # The body is already parsed in the Request class and available as request.body
+                request_data = request.body
+            
+                # If the body wasn't correctly parsed as JSON in the Request class
+                if not isinstance(request_data, dict):
+                    logging.error("Empty or invalid request body for POST /login")
+                    return self.json_response({"error": "Empty or invalid request body."}, status=400)
+                
+                username = request_data.get("username")
+                password = request_data.get("password")
+                logging.debug(f"POST Request Data: Username: {username}")
+            
+                # Validate user credentials
+                user = db.get_user(username)
+                logging.debug(f"User lookup result: {user}")
+
+                # First check if user exists
+                if not user:
+                    return self.json_response({"error": "User not found"}, status=401)
+
+                # Then check if user data has enough elements
+                if len(user) < 3:
+                    logging.error(f"Invalid user data format: {user}")
+                    return self.json_response({"error": "Internal server error"}, status=500)
+
+                # Finally verify password
+                if not self.verify_password(password, user[2]):
+                    return self.json_response({"error": "Invalid password"}, status=401)
+
+                # If all checks pass, create session and return success
+                session_id = session_manager.create_session(user[0])
+                return self.json_response({"message": "Login successful!", "redirect": "/dashboard"}, status=200)
+            
+            except Exception as e:
+                logging.error(f"Error in login: {e}")
+                logging.error(traceback.format_exc())
+                return self.json_response({"error": "Internal server error."}, status=500)
+    
+        elif request.method == "GET":
+            return Response(
+                self.template_engine.render("public/login.html", {"error": ""}),
+                headers={"Content-Type": "text/html"}
+            )
+    
+        return self.json_response({"error": "Method not allowed."}, status=405)
+
+    def login(self, request):
+        """Handles the login page and login requests."""
+        if request.method == "POST":
+            try:
+                # Get and validate request data
+                request_data = request.body
+            
+                if not isinstance(request_data, dict) or not request_data:
+                    logging.warning("Invalid or empty request body for login")
+                    return self.json_response({"error": "Invalid request format"}, status=400)
+                
+                username = request_data.get("username")
+                password = request_data.get("password")
+            
+                 # Validate required fields
+                if not username or not password:
+                    logging.warning(f"Missing credentials: username={bool(username)}, password={bool(password)}")
+                    return self.json_response({"error": "Username and password are required"}, status=400)
+            
+                # Get user and validate credentials
+                user = db.get_user(username)
+                logging.debug(f"User lookup result: {user is not None}")
+            
+                if not user:
+                    logging.warning(f"Login attempt with non-existent username: {username}")
+                    # Use generic error message for security
+                    return self.json_response({"error": "Invalid credentials"}, status=401)
+                
+                if len(user) < 3:
+                    logging.error(f"Invalid user data structure for {username}")
+                    return self.json_response({"error": "System error"}, status=500)
+                
+                if not self.verify_password(password, user[2]):
+                    logging.warning(f"Failed login attempt for user: {username}")
+                    # Use generic error message for security
+                    return self.json_response({"error": "Invalid credentials"}, status=401)
+                
+                # Authentication successful
+                logging.info(f"Successful login for user: {username}")
+            
+                # Create session
+                session_id = session_manager.create_session(user[0])
+            
+                # Set session cookie and return success with redirect
+                response = Response(
+                    body={"success": True, "message": "Login successful", "redirect": "/dashboard"},
+                    status=200,
+                    headers={"Content-Type": "application/json"}
+                )
+            
+                # Set secure session cookie
+                response.set_cookie("session_id", session_id, 
+                                    httponly=True,  # Prevent JavaScript access
+                                    secure=True,    # HTTPS only
+                                    samesite="Lax", # CSRF protection
+                                    path="/",       # Available throughout site
+                                    max_age=86400)  # 24 hours
+                                
+                return response
+            
+            except Exception as e:
+                logging.error(f"Login error: {e}", exc_info=True)
+                return self.json_response({"error": "An unexpected error occurred"}, status=500)
+    
+        elif request.method == "GET":
+            return Response(
+                self.template_engine.render("public/login.html", {"error": ""}),
+                headers={"Content-Type": "text/html"}
+            )
+    
+        return self.json_response({"error": "Method not allowed"}, status=405)   
 # Create an instance of the AuthController with the template engine
 auth_controller = AuthController(template_engine)

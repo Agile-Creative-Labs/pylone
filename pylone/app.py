@@ -9,6 +9,7 @@
 import os
 import json
 import logging
+import traceback
 from pylone.router import Router
 from pylone.request import Request
 from pylone.middleware import Middleware

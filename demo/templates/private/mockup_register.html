@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Apple Account</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .registration-container {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 560px;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    
+    .apple-logo {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 10px;
+    }
+    
+    .colored-dots {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 20px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      font-weight: 400;
+      color: #1d1d1f;
+    }
+    
+    .subtitle {
+      color: #86868b;
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #1d1d1f;
+      font-size: 14px;
+      font-weight: 500;
+      padding-left: 5px;
+    }
+    
+    .apple-input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #d2d2d7;
+      font-size: 17px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    
+    .apple-input:focus {
+      border-color: #0071e3;
+      box-shadow: 0 0 0 4px rgba(0, 125, 250, 0.1);
+    }
+    
+    .name-inputs {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      text-align: left;
+      margin-bottom: 20px;
+      margin-top: 30px;
+    }
+    
+    .apple-checkbox {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1px solid #d2d2d7;
+      border-radius: 4px;
+      margin-right: 10px;
+      position: relative;
+      cursor: pointer;
+      margin-top: 2px;
+    }
+    
+    .apple-checkbox:checked:after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #0071e3;
+      top: 3px;
+      left: 3px;
+      border-radius: 1px;
+    }
+    
+    .checkbox-label {
+      font-size: 14px;
+      color: #86868b;
+      line-height: 1.4;
+    }
+    
+    .submit-button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      font-size: 17px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      max-width: 200px;
+      margin-bottom: 30px;
+      margin-top: 20px;
+    }
+    
+    .submit-button:hover {
+      background-color: #0077ED;
+    }
+    
+    .submit-button:active {
+      background-color: #0062C3;
+    }
+    
+    .footer-links {
+      margin-top: 20px;
+    }
+    
+    .apple-link {
+      color: #0070c9;
+      text-decoration: none;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    .apple-link:hover {
+      text-decoration: underline;
+    }
+    
+    .terms {
+      font-size: 12px;
+      color: #86868b;
+      margin-top: 30px;
+      line-height: 1.4;
+    }
+    
+    .terms a {
+      color: #0070c9;
+      text-decoration: none;
+    }
+    
+    .terms a:hover {
+      text-decoration: underline;
+    }
+    
+    .dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .error-message {
+      color: #ff3b30;
+      font-size: 12px;
+      text-align: left;
+      margin-top: 5px;
+      padding-left: 5px;
+      display: none;
+    }
+    
+    /* Helper for showing strength indicator */
+    .password-strength {
+      height: 4px;
+      background-color: #f0f0f0;
+      margin-top: 10px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .strength-meter {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s, background-color 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="registration-container">
+    <div class="colored-dots" id="colored-dots">
+      <svg class="apple-logo" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.197-2.12-9.973-3.17-14.34-3.17-4.58 0-9.492 1.05-14.746 3.17-5.262 2.13-9.501 3.24-12.742 3.35-4.929 0.21-9.842-1.96-14.746-6.52-3.13-2.73-7.045-7.41-11.735-14.04-5.032-7.08-9.169-15.29-12.41-24.65-3.471-10.11-5.211-19.9-5.211-29.378 0-10.857 2.346-20.221 7.045-28.068 3.693-6.303 8.606-11.275 14.755-14.925s12.793-5.51 19.948-5.629c3.915 0 9.049 1.211 15.429 3.591 6.362 2.388 10.447 3.599 12.238 3.599 1.339 0 5.877-1.416 13.57-4.239 7.275-2.618 13.415-3.702 18.445-3.275 13.63 1.1 23.87 6.473 30.68 16.153-12.19 7.386-18.22 17.731-18.1 31.002 0.11 10.337 3.86 18.939 11.23 25.769 3.34 3.17 7.07 5.62 11.22 7.36-0.9 2.61-1.85 5.11-2.86 7.51zM119.11 7.24c0 8.102-2.96 15.667-8.86 22.669-7.12 8.324-15.732 13.134-25.071 12.375-0.119-0.972-0.188-1.995-0.188-3.07 0-7.778 3.386-16.102 9.399-22.908 3.002-3.446 6.82-6.311 11.45-8.597 4.62-2.252 8.99-3.497 13.1-3.71 0.12 1.083 0.17 2.166 0.17 3.24z" fill="#000"/>
+      </svg>
+    </div>
+    
+    <h1>Create Apple ID</h1>
+    <p class="subtitle">One Apple ID is all you need to access all Apple services.</p>
+    
+    <form id="registration-form">
+      <div class="name-inputs">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" class="apple-input" required>
+          <div class="error-message" id="firstName-error">Please enter your first name</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" class="apple-input" required>
+          <div class="error-message" id="lastName-error">Please enter your last name</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="apple-input" required>
+        <div class="error-message" id="email-error">Please enter a valid email address</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="apple-input" required placeholder="Must be at least 8 characters">
+        <div class="password-strength">
+          <div class="strength-meter" id="strength-meter"></div>
+        </div>
+        <div class="error-message" id="password-error">Password must be at least 8 characters</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" class="apple-input" required>
+        <div class="error-message" id="confirmPassword-error">Passwords do not match</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="birthdate">Date of Birth</label>
+        <input type="date" id="birthdate" class="apple-input" required>
+        <div class="error-message" id="birthdate-error">Please enter your date of birth</div>
+      </div>
+      
+      <div class="checkbox-container">
+        <input type="checkbox" id="terms" class="apple-checkbox" required>
+        <label for="terms" class="checkbox-label">I have read and agree to Apple's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+      
+      <div class="checkbox-container">
+        <input type="checkbox" id="announcements" class="apple-checkbox">
+        <label for="announcements" class="checkbox-label">I would like to receive Apple news, product announcements, and special offers via email</label>
+      </div>
+      
+      <button type="submit" class="submit-button">Continue</button>
+      
+      <div class="terms">
+        By creating an Apple ID, you consent to Apple's <a href="#">Privacy Policy</a> and <a href="#">Terms & Conditions</a> that govern your use of Apple services. Learn more about how Apple manages your information in our <a href="#">Privacy Policy</a>.
+      </div>
+      
+      <div class="footer-links">
+        <a href="#" class="apple-link">Already have an Apple ID? Sign in</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const dotsContainer = document.getElementById('colored-dots');
+      const colors = [
+        '#ff9500', '#ff9500', '#ff9500', 
+        '#ff3b30', '#ff3b30', '#ff3b30', 
+        '#ff2d55', '#ff2d55', '#ff2d55', 
+        '#af52de', '#af52de', '#af52de', 
+        '#5856d6', '#5856d6', '#5856d6', 
+        '#007aff', '#007aff', '#007aff', 
+        '#54c7fc', '#54c7fc', '#54c7fc',
+        '#e0e0e0', '#e0e0e0', '#e0e0e0'
+      ];
+      
+      // Create dots in a circular pattern
+      const totalDots = colors.length;
+      const radius = 60;
+      const centerX = 80;
+      const centerY = 80;
+      
+      for (let i = 0; i < totalDots; i++) {
+        const angle = (i / totalDots) * 2 * Math.PI;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+        dot.style.backgroundColor = colors[i];
+        
+        dotsContainer.appendChild(dot);
+      }
+      
+      // Handle checkbox functionality
+      const checkboxes = document.querySelectorAll('.apple-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          this.classList.toggle('checked');
+        });
+      });
+      
+      // Password strength meter
+      const passwordInput = document.getElementById('password');
+      const strengthMeter = document.getElementById('strength-meter');
+      
+      passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        if (password.length >= 8) strength += 25;
+        if (password.match(/[A-Z]/)) strength += 25;
+        if (password.match(/[0-9]/)) strength += 25;
+        if (password.match(/[^A-Za-z0-9]/)) strength += 25;
+        
+        strengthMeter.style.width = strength + '%';
+        
+        if (strength <= 25) {
+          strengthMeter.style.backgroundColor = '#ff3b30'; // Red
+        } else if (strength <= 50) {
+          strengthMeter.style.backgroundColor = '#ff9500'; // Orange
+        } else if (strength <= 75) {
+          strengthMeter.style.backgroundColor = '#ffcc00'; // Yellow
+        } else {
+          strengthMeter.style.backgroundColor = '#34c759'; // Green
+        }
+      });
+      
+      // Form validation
+      const form = document.getElementById('registration-form');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let isValid = true;
+        
+        // Reset error messages
+        const errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(msg => {
+          msg.style.display = 'none';
+        });
+        
+        // Validate first name
+        const firstName = document.getElementById('firstName');
+        if (!firstName.value.trim()) {
+          document.getElementById('firstName-error').style.display = 'block';
+          firstName.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate last name
+        const lastName = document.getElementById('lastName');
+        if (!lastName.value.trim()) {
+          document.getElementById('lastName-error').style.display = 'block';
+          lastName.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate email
+        const email = document.getElementById('email');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value)) {
+          document.getElementById('email-error').style.display = 'block';
+          email.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate password
+        if (passwordInput.value.length < 8) {
+          document.getElementById('password-error').style.display = 'block';
+          passwordInput.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate password confirmation
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          document.getElementById('confirmPassword-error').style.display = 'block';
+          confirmPasswordInput.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate birthdate
+        const birthdate = document.getElementById('birthdate');
+        if (!birthdate.value) {
+          document.getElementById('birthdate-error').style.display = 'block';
+          birthdate.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Submit if valid
+        if (isValid) {
+          alert('Registration successful! A verification email will be sent to ' + email.value);
+          form.reset();
+        }
+      });
+      
+      // Reset validation styling on input
+      const inputs = document.querySelectorAll('.apple-input');
+      inputs.forEach(input => {
+        input.addEventListener('input', function() {
+          this.style.borderColor = '#d2d2d7';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
