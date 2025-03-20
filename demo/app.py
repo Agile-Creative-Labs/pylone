@@ -1,5 +1,5 @@
 """
-Filename: app.py
+Filename: demo/app.py
 
 Description:
 This script sets up a web application using the `pylone.app.App` framework. It includes:
@@ -119,18 +119,6 @@ class AppProxy:
         except Exception as e:
             logging.error(f"HTTP server encountered an error: {e}")
 
-    def x_run_websocket_server(self, ws_host, ws_port):
-        """Runs the WebSocket server in a separate thread."""
-        try:
-            self.loop.run_until_complete(self.base_app.start_websocket_server(ws_host, ws_port))
-        except asyncio.CancelledError:
-            logging.info("WebSocket server task was cancelled.")
-        except Exception as e:
-            logging.error(f"Unexpected error in WebSocket server: {e}")
-        finally:
-            logging.info("WebSocket server thread exiting...")
-
-
     async def _stop_event_loop(self):
         """Stop the event loop safely by ensuring all tasks are canceled."""
         tasks = [task for task in asyncio.all_tasks() if not task.done()]
@@ -142,31 +130,6 @@ class AppProxy:
                 pass
         self.loop.stop()
 
-    def x_________shutdown(self):
-        """Shutdown the HTTP server, WebSocket server, and event loop cleanly."""
-        logging.info("Shutting down servers gracefully...")
-
-        # Shutdown HTTP server
-        if self.http_server:
-            logging.info("Shutting down HTTP server...")
-            self.http_server.shutdown()
-            self.http_thread.join()
-            logging.info("HTTP server shut down.")
-
-        # Shutdown WebSocket server properly
-        if self.websocket_thread and self.websocket_thread.is_alive():
-            logging.info("Shutting down WebSocket server...")
-
-            if self.loop and self.loop.is_running():
-                # Stop the WebSocket server safely
-                future = asyncio.run_coroutine_threadsafe(self._shutdown_websockets(), self.loop)
-                future.result()  # Ensure completion before proceeding
-
-            self.websocket_thread.join()
-            logging.info("WebSocket server shut down.")
-
-        self.shutdown_event.set()  # Signal the run() method to exit
-        logging.info("All servers shut down gracefully. Exiting...")
 
     async def _shutdown_websockets(self):
         """Stop the WebSocket server and clean up all tasks properly."""

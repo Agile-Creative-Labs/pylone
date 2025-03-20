@@ -1,0 +1,151 @@
+{% extends "private_base.html" %}
+{% block private_content %}
+    <div id="chat-container">
+        <h1>Chat Interface</h1>
+        
+        <div id="login-container" style="{% if username %}display:none;{% endif %}">
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="text" id="username-input" placeholder="Username" required>
+                <input type="password" id="password-input" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        
+        <div id="messages"></div>
+        
+        <form id="message-form" {% if not username %}style="display:none;"{% endif %}>
+            <input type="text" id="message-input" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+{% endblock %}
+    
+    <script>
+        // WebSocket connection
+        let socket;
+        let username = "{{ username }}";
+        let user_id = "{{ user_id }}";
+        
+        // DOM elements
+        const messagesContainer = document.getElementById('messages');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const loginForm = document.getElementById('login-form');
+        const loginContainer = document.getElementById('login-container');
+        
+        // Connect to WebSocket
+        function connectWebSocket() {
+            socket = new WebSocket("{{ ws_url }}");
+            
+            socket.onopen = function(e) {
+                addMessage('System', 'Connected to chat server');
+            };
+            
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                
+                if (data.type === 'auth_response') {
+                    if (data.success) {
+                        loginContainer.style.display = 'none';
+                        messageForm.style.display = 'flex';
+                        user_id = data.user_id;
+                        addMessage('System', 'Login successful');
+                    } else {
+                        addMessage('System', 'Login failed. Please try again.');
+                    }
+                } else if (data.type === 'chat_message') {
+                    addMessage(data.user, data.content);
+                } else if (data.type === 'system') {
+                    addMessage('System', data.message);
+                }
+            };
+            
+            socket.onclose = function(event) {
+                if (event.wasClean) {
+                    addMessage('System', `Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                } else {
+                    addMessage('System', 'Connection died');
+                }
+            };
+            
+            socket.onerror = function(error) {
+                addMessage('System', `Error: ${error.message}`);
+            };
+        }
+        
+        // Add a message to the chat
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            
+            let messageClass = 'message ';
+            if (sender === 'System') {
+                messageClass += 'system-message';
+            } else if (sender === username) {
+                messageClass += 'user-message';
+            } else {
+                messageClass += 'other-message';
+            }
+            
+            messageDiv.className = messageClass;
+            messageDiv.innerHTML = `<div>${text}</div><div class="message-meta">${sender} - ${timeString}</div>`;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Handle sending a message
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = messageInput.value.trim();
+            if (message === '') return;
+            
+            // Send message through WebSocket
+            socket.send(JSON.stringify({
+                type: 'chat_message',
+                user_id: user_id,
+                content: message
+            }));
+            
+            // Clear input
+            messageInput.value = '';
+        });
+        
+        // Handle login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username-input').value.trim();
+            const password = document.getElementById('password-input').value;
+            
+            if (username === '' || password === '') return;
+            
+            // Send authentication through WebSocket
+            socket.send(JSON.stringify({
+                type: 'auth',
+                username: username,
+                password: password
+            }));
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get recent messages (optional)
+            fetch('/chat/messages')
+                .then(response => response.json())
+                .then(data => {
+                    data.messages.forEach(msg => {
+                        addMessage(msg.username, msg.message);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching messages:', error);
+                });
+            
+            // Connect to WebSocket
+            connectWebSocket();
+        });
+    </script>

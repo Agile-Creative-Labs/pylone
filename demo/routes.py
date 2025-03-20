@@ -27,6 +27,7 @@ from demo.controllers.dashboard_controller import dashboard_controller
 from demo.controllers.ajax_controller import ajax_controller
 from demo.controllers.test_controller import TestController
 
+
 # Create a router
 router = Router()
 
@@ -64,6 +65,8 @@ router.add_route("/test-text", test_controller.test_text_response, methods=["GET
 router.add_route("/test-raw-bytes", test_controller.test_raw_bytes_response, methods=["GET"])
 router.add_route("/test-invalid", test_controller.test_invalid_response, methods=["GET"])
 router.add_route("/test-links",test_controller.links, methods=["GET"])
+
+
 
 # Fallback route for 404 errors
 #TODO: Implement this router.add_route("/404", error_controller.not_found, methods=["GET"])
