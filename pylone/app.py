@@ -6,6 +6,7 @@
     Author: cooper@agilecreativelabs.ca
     Copyright: © 2025 Agile Creative Labs Inc.
 """
+
 import os
 import json
 import logging
@@ -14,6 +15,11 @@ from pylone.router import Router
 from pylone.request import Request
 from pylone.middleware import Middleware
 from pylone.template import TemplateEngine
+from pylone.websocket import WebSocketWrapper
+import asyncio
+from threading import Thread
+from wsgiref.simple_server import make_server
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -33,6 +39,7 @@ class App:
         self.router = router or Router()
         self.middlewares = middlewares or []
         self.template_engine = TemplateEngine(templates_dir or TEMPLATES_DIR)
+        self.websocket_wrapper = None
 
     def render_template(self, template_name, context=None, status=200, headers=None):
         """Render a template and return a WSGI-compliant response."""
@@ -180,3 +187,58 @@ class App:
         except Exception as e:
             logging.error(f"APP -> Critical error in middleware or app: {e} Exiting Pylone ...")
             os._exit(1)  # Forcefully terminate the program
+
+    async def start_websocket_server(self, host="127.0.0.1", port=8001):
+        """Start the WebSocket server (if enabled)."""
+        if self.websocket_wrapper:
+            await self.websocket_wrapper.start(host, port)
+            logging.info(f"🚀 WebSocket server running on ws://{host}:{port}")
+
+    def run(self, http_host="127.0.0.1", http_port=8000, ws_host="127.0.0.1", ws_port=8001):
+        """Run the HTTP and WebSocket servers."""
+        from wsgiref.simple_server import make_server
+
+        # Start the HTTP server
+        http_server = make_server(http_host, http_port, self)
+        logging.info(f"🚀 HTTP server running on http://{http_host}:{http_port}")
+
+        # Start the WebSocket server in a separate thread (if enabled)
+        if self.websocket_wrapper:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            websocket_thread = Thread(target=loop.run_until_complete, args=(self.start_websocket_server(ws_host, ws_port),))
+            websocket_thread.start()
+
+        # Start the HTTP server
+        http_server.serve_forever()
+
+    # In pylone/app.py
+    def add_websocket_route(self, path, handler=None):
+        """
+        Register a WebSocket route.
+    
+        Can be used as a decorator or as a direct method call:
+    
+        @app.add_websocket_route("/chat")
+        async def chat_handler(websocket):
+            pass
+    
+        OR
+    
+        app.add_websocket_route("/chat", chat_handler)
+        """
+        if handler is None:
+            # Being used as a decorator
+            def decorator(handler_func):
+                self._register_websocket_handler(path, handler_func)
+                return handler_func
+            return decorator
+        else:
+            # Being used as a normal method
+            self._register_websocket_handler(path, handler)
+        
+    def _register_websocket_handler(self, path, handler):
+        """Helper method to register the websocket handler"""
+        if not self.websocket_wrapper:
+            self.websocket_wrapper = WebSocketWrapper()
+        self.websocket_wrapper.add_route(path, handler)

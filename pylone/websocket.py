@@ -1,102 +1,97 @@
-"""
-    WebSocketServer Class
-
-    A generic WebSocket server class that handles WebSocket connections and messaging.
-    This class provides a simple way to integrate real-time communication into your Python framework.
-
-    Features:
-    - Manages WebSocket connections and automatically registers/unregisters clients.
-    - Broadcasts incoming messages to all connected clients.
-    - Customizable handler for processing messages.
-    - Logs connection events and received messages.
-
-    Usage Example:
-
-    # Initialize the WebSocket server
-    server = WebSocketServer(host='localhost', port=8765)
-
-    # Start the WebSocket server
-    server.start()
-
-    Attributes:
-        host (str): The host address to bind the WebSocket server.
-        port (int): The port number to bind the WebSocket server.
-        clients (set): A set of connected WebSocket clients.
-    
-    Author: Agile Creative Labs Inc
-    Date: 2024-06-25 
-    Version: 1.0        
-"""
+# pylone/websocket.py
 import asyncio
-import websockets
 import logging
-from typing import Callable, Awaitable
+import re
+from websockets import serve
 
-class WebSocketServer:
-    """
-    A generic WebSocket server class that handles WebSocket connections and messaging.
-
-    Attributes:
-        host (str): The host address to bind the WebSocket server.
-        port (int): The port number to bind the WebSocket server.
-        handler (Callable[[websockets.WebSocketServerProtocol, str], Awaitable[None]]):
-            A callback function to handle incoming messages.
-    """
-
-    def __init__(self, host: str = 'localhost', port: int = 8765):
-        """
-        Initialize the WebSocketServer.
-
-        Args:
-            host (str): The host address to bind the WebSocket server. Defaults to 'localhost'.
-            port (int): The port number to bind the WebSocket server. Defaults to 8765.
-        """
-        self.host = host
-        self.port = port
+class WebSocketWrapper:
+    """Wrapper for handling WebSocket connections."""
+    
+    def __init__(self):
+        self.websocket_routes = {}
         self.clients = set()
-
-    async def handler(self, websocket: websockets.WebSocketServerProtocol, path: str):
+        
+    def add_route(self, path, handler):
         """
-        Handle incoming WebSocket connections and messages.
-
+        Register a WebSocket route.
+        
         Args:
-            websocket (websockets.WebSocketServerProtocol): The WebSocket connection.
-            path (str): The path of the WebSocket connection.
+            path (str): The URL path for the WebSocket route.
+            handler (callable): The coroutine function to handle WebSocket connections.
         """
-        # Register client
+        # Convert dynamic route parameters to a regex pattern
+        pattern = re.sub(r"<(\w+:)?(\w+)>", r"(?P<\2>[^/]+)", path)
+        self.websocket_routes[path] = {
+            "pattern": re.compile(f"^{pattern}$"),
+            "handler": handler
+        }
+        logging.info(f"WebSocket Route Added: {path}")
+        
+    async def handle_connection(self, websocket, path):
+        """
+        Handle an incoming WebSocket connection.
+        
+        Args:
+            websocket: The WebSocket connection object.
+            path (str): The request path.
+        """
+        # Add client to the connected clients set
         self.clients.add(websocket)
+        matched = False
+        
         try:
-            async for message in websocket:
-                logging.info(f"Received message: {message}")
-                # Broadcast the message to all connected clients
-                await self.broadcast(message)
-        except websockets.ConnectionClosed:
-            logging.info("Connection closed")
+            logging.info(f"New WebSocket connection: {path}")
+            
+            # Match the path to a registered WebSocket route
+            for route_path, route_info in self.websocket_routes.items():
+                match = route_info["pattern"].match(path)
+                if match:
+                    matched = True
+                    handler = route_info["handler"]
+                    kwargs = match.groupdict()
+                    
+                    # Call the handler with the websocket and any path parameters
+                    if kwargs:
+                        await handler(websocket, **kwargs)
+                    else:
+                        await handler(websocket)
+                    break
+            
+            if not matched:
+                logging.warning(f"No WebSocket handler found for path: {path}")
+                await websocket.close(1003, "Path not found")
+                
+        except Exception as e:
+            logging.error(f"Error in WebSocket handler: {e}")
         finally:
-            # Unregister client
-            self.clients.remove(websocket)
-
-    async def broadcast(self, message: str):
+            # Remove client from the connected clients set
+            if websocket in self.clients:
+                self.clients.remove(websocket)
+            
+    async def broadcast(self, message, exclude=None):
         """
         Broadcast a message to all connected clients.
-
+        
         Args:
-            message (str): The message to broadcast.
+            message (str): Message to broadcast.
+            exclude: Optional client to exclude from broadcast.
         """
-        if self.clients:
-            await asyncio.wait([client.send(message) for client in self.clients])
-
-    def start(self):
+        for client in self.clients:
+            if client != exclude and not client.closed:
+                try:
+                    await client.send(message)
+                except Exception as e:
+                    logging.error(f"Error broadcasting to client: {e}")
+                    
+    async def start(self, host="127.0.0.1", port=8001):
         """
         Start the WebSocket server.
+        
+        Args:
+            host (str): Host address to bind to.
+            port (int): Port to listen on.
         """
-        start_server = websockets.serve(self.handler, self.host, self.port)
-        logging.info(f"WebSocket server started at ws://{self.host}:{self.port}")
-        asyncio.get_event_loop().run_until_complete(start_server)
-        asyncio.get_event_loop().run_forever()
-
-# Example usage
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    server = WebSocketServer(host='localhost', port=8765)
-    server.start()
+        async with serve(self.handle_connection, host, port):
+            logging.info(f"WebSocket server started on ws://{host}:{port}")
+            # Keep the server running
+            await asyncio.Future()  # Run forever

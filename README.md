@@ -37,7 +37,7 @@ cd pylone
 ```
 2.Run the application
 ```sh
-python run.py
+python3 run.py --port 8000 --ws-port 8001 --debug
 ```
 2.Open your browser and navigate to 
 ```sh
