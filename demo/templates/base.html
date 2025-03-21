@@ -20,10 +20,213 @@
     <!---->
     <link rel="stylesheet" href="/static/css/ui_toolkit.css">
     <script src="/static/js/ui_notifications.js"></script>
-    <script src="/static/js/test.js"></script>
-  
-    <script type="text/javascript">
-        // Function to update the CSS link based on the URL path
+    <script>
+        class App 
+{
+    constructor() 
+    {
+        this.resultDiv = document.getElementById('result');
+        this.loadingDiv = document.getElementById('loading');
+        this.errorDiv = document.getElementById('error');
+
+        this.initEventListeners();
+        console.log('XXXX constructor');
+    }
+
+    initEventListeners() 
+    {
+        const fetchDataButton = document.getElementById('fetch-data');
+        const loginButton = document.getElementById('btn-login');
+        const registerButton = document.getElementById('btn-register');
+        const signInButton = document.getElementById('btn-sign-in');
+
+        if (fetchDataButton) 
+        {
+            fetchDataButton.addEventListener('click', () => this.fetchData());
+            console.log('XXXX FETCH');
+        }
+
+        if (loginButton) 
+        {
+            loginButton.addEventListener('click', () => this.navigateTo('/login'));
+            console.log('XXXX LOGIN ');
+        }
+
+        if (registerButton) 
+        {
+            registerButton.addEventListener('click', () => this.navigateTo('/register'));
+            console.log('XXXX REGISTER');
+        }
+    
+        if (signInButton)
+        {
+            
+            signInButton.addEventListener('click', () => this.postLogin());
+            console.log('XXXX SIGN IN');
+        }
+    }
+
+
+    async fetchData() 
+    {
+        try {
+            if (this.loadingDiv) this.loadingDiv.style.display = 'block';
+            if (this.errorDiv) this.errorDiv.style.display = 'none';
+
+            const response = await fetch('/ajax/data');
+            const data = await response.json();
+
+            if (this.resultDiv) {
+                this.resultDiv.innerHTML = `<p>${data.data.message}</p>`;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            if (this.errorDiv) this.errorDiv.style.display = 'block';
+        } finally {
+            if (this.loadingDiv) this.loadingDiv.style.display = 'none';
+        }
+    }
+
+    async postLogin() 
+    {
+    try {
+        // Show loading and hide any previous errors
+        if (this.loadingDiv) this.loadingDiv.style.display = 'block';
+        if (this.errorDiv) this.errorDiv.style.display = 'none';
+        
+        // Get form values with validation
+        const usernameElement = document.getElementById('username');
+        const passwordElement = document.getElementById('password');
+        
+        if (!usernameElement || !passwordElement) {
+            alert('login form not found.')
+           // throw new Error('Login form elements not found');
+            return false;
+        }
+        
+        const username = usernameElement.value.trim();
+        const password = passwordElement.value;
+        
+        // Client-side validation
+        if (!username) {
+            alert('username is missing')
+            //throw new Error('Username is required');
+            return false;
+        }
+        
+        if (!password) {
+            alert('password is missing')
+            //throw new Error('Password is required');
+            return false;
+        }
+        
+        const payload = { username, password };
+        
+        // Send login request
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest' // Help prevent CSRF
+            },
+            body: JSON.stringify(payload),
+            credentials: 'same-origin' // Include cookies in the request
+        });
+        
+        // Parse response
+        let data;
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+            alert(data);
+                console.log('XXXX ajax response',data);
+        } else {
+            alert('Invalid content type format')
+            console.error('Unexpected content type:', contentType);
+            throw new Error('Unexpected response format');
+        }
+        
+        // Handle response
+        if (response.ok) {
+            // Show success message if needed
+            if (data.message) {
+                // Optional: show a success message before redirecting
+                this.showSuccessMessage(data.message);
+                    console.log('XXXX SUCCESS');
+            }
+            
+            // Handle redirect
+            if (data.redirect) {
+                window.location.href = data.redirect;
+                 console.log('XXXX REDIRECT');
+            } else {
+                console.warn('No redirect URL provided in successful login response');
+                window.location.href = '/dashboard'; // Fallback
+                 console.log('XXXX FALLBACK');
+            }
+        } else {
+            // Handle error with proper message extraction
+            let errorMessage = 'Authentication failed';
+            
+            if (data && typeof data === 'object') {
+                if (data.error) {
+                    errorMessage = data.error;
+                     console.log('XXXX 1', data.error);
+                } else if (data.data && data.data.error) {
+                    // Handle your JSON response structure: {status: 401, data: {error: "message"}}
+                    errorMessage = data.data.error;
+                     console.log('XXXX 2', data.error);
+                }
+            }
+            
+            this.showError(errorMessage);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        this.showError(error.message || 'An unexpected error occurred');
+    } finally {
+        if (this.loadingDiv) this.loadingDiv.style.display = 'none';
+    }
+}
+
+// Helper methods
+    showError(message) 
+    {
+        if (this.errorDiv) 
+        {
+            this.errorDiv.textContent = message;
+            this.errorDiv.style.display = 'block';
+        
+            // Focus back to the form for accessibility
+            const firstInput = document.getElementById('username');
+            if (firstInput) firstInput.focus();
+        }
+    }
+
+    showSuccessMessage(message) 
+    {
+        // You could implement this if you want to show success messages
+        // Maybe add a success div to your HTML
+        const successDiv = document.getElementById('login-success');
+        if (successDiv) {
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+    }
+
+    navigateTo(route) 
+    {
+        window.location.href = route;
+    }
+}
+
+
+
+
+
+
+// Function to update the CSS link based on the URL path
 function updateCSSBasedOnPath() {
     const cssLink = document.querySelector("link[rel='stylesheet']");
     const currentPath = window.location.pathname;
@@ -38,10 +241,19 @@ function updateCSSBasedOnPath() {
 }
 
 // Listen for changes to the URL (using the popstate event for navigation changes)
-window.addEventListener("popstate", updateCSSBasedOnPath);
+//window.addEventListener("popstate", updateCSSBasedOnPath);
 
 // Call the function once to set the initial CSS based on the current path
-updateCSSBasedOnPath();
+//updateCSSBasedOnPath();
+
+ document.addEventListener('DOMContentLoaded', () => {
+    const hWndLogin = new App();
+    updateCSSBasedOnPath();
+
+    window.addEventListener("popstate", updateCSSBasedOnPath);
+});
+        
+           
 
     </script>
 </head>

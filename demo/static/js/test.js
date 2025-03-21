@@ -1,5 +1,3 @@
-     
-
 class App 
 {
     constructor() 
@@ -116,11 +114,13 @@ class App
             // Show success message if needed
             if (data.message) {
                 // Optional: show a success message before redirecting
+                alert(data.message);
                 this.showSuccessMessage(data.message);
             }
             
             // Handle redirect
             if (data.redirect) {
+                alert(data.redirect);
                 window.location.href = data.redirect;
             } else {
                 console.warn('No redirect URL provided in successful login response');

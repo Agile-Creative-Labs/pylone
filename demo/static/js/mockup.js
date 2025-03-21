@@ -1,123 +1,175 @@
 class ChatApp {
     constructor() {
+        // Cache DOM elements
         this.chatInput = document.getElementById('chatInput');
         this.chatHistory = document.getElementById('chatHistory');
         this.welcomeContainer = document.getElementById('welcomeContainer');
         this.actionCardsContainer = document.getElementById('actionCardsContainer');
         this.sendBtn = document.getElementById('sendBtn');
 
-        // Check if elements exist before adding event listeners
-        if (this.sendBtn) {
-            this.initialize();
-        } else {
-            console.error('Send button not found!');
+        // Validate required DOM elements
+        this.validateElements();
+
+        // Initialize event listeners
+        this.initializeEventListeners();
+    }
+
+    /**
+     * Validates that all required DOM elements exist.
+     * Throws an error if any element is missing.
+     */
+    validateElements() {
+        const elements = {
+            chatInput: this.chatInput,
+            chatHistory: this.chatHistory,
+            welcomeContainer: this.welcomeContainer,
+            actionCardsContainer: this.actionCardsContainer,
+            sendBtn: this.sendBtn,
+        };
+
+        for (const [name, element] of Object.entries(elements)) {
+            if (!element) {
+                throw new Error(`Required element "${name}" is missing.`);
+            }
         }
     }
 
-    initialize() {
-        // Add event listener for the send button
+    /**
+     * Initializes event listeners.
+     */
+    initializeEventListeners() {
         this.sendBtn.addEventListener('click', () => this.sendMessage());
+        this.chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.sendMessage();
+            }
+        });
     }
 
+    /**
+     * Sends a message.
+     * @param {string} predefinedMessage - An optional predefined message to send.
+     */
     sendMessage(predefinedMessage = '') {
         const userMessage = predefinedMessage || this.chatInput.value.trim();
 
-        if (userMessage !== '') {
-            // Hide elements
+        if (userMessage) {
+            // Hide welcome and action cards sections
             this.welcomeContainer.classList.add('hidden');
             this.actionCardsContainer.classList.add('hidden');
 
             // Append user message to chat history
-            this.appendUserMessage(userMessage);
+            this.appendMessage(userMessage, true);
 
-            // Clear chat input if not a predefined message
+            // Clear input if not a predefined message
             if (!predefinedMessage) {
                 this.chatInput.value = '';
             }
 
-            // Simulate chatbot response after 1 second
-            setTimeout(() => {
-                this.appendBotResponse();
-                this.appendRegenerateButton();
-            }, 1000);
+            // Simulate bot response after 1 second
+            this.simulateBotResponse();
         }
     }
 
-    appendUserMessage(message) {
-        const userMessageContainer = document.createElement('div');
-        userMessageContainer.classList.add('d-flex', 'align-items-start', 'mb-3', 'fade-up');
+    /**
+     * Appends a message to the chat history.
+     * @param {string} text - The message text.
+     * @param {boolean} isSent - Whether the message was sent by the user.
+     */
+    appendMessage(text, isSent) {
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('d-flex', 'align-items-start', 'mb-3', 'fade-up');
 
-        const userImage = document.createElement('img');
-        userImage.src = '/static/images/pfpuser.png'; // User profile image
-        userImage.alt = 'User';
-        userImage.classList.add('rounded-circle', 'me-2');
-        userImage.style.width = '40px';
-        userImage.style.marginTop = '0.5rem';
+        const profileImage = document.createElement('img');
+        profileImage.src = isSent ? '/static/images/pfpuser.png' : '/static/images/pfpbot.png';
+        profileImage.alt = isSent ? 'User' : 'Bot';
+        profileImage.classList.add('rounded-circle', 'me-2');
+        profileImage.style.width = '40px';
+        profileImage.style.marginTop = '0.5rem';
 
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.classList.add('alert', 'alert-primary', 'text-start', 'flex-grow-1');
-        userMessageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('alert', 'text-start', 'flex-grow-1');
+        messageDiv.style.backgroundColor = isSent ? '#d1e7dd' : '#ffffff'; // Different colors for sent/received
+        messageDiv.style.border = '1px solid #dee2e6';
+        messageDiv.style.borderRadius = '0.25rem';
+        messageDiv.innerHTML = `<strong>${isSent ? 'You:' : 'Fluwd:'}</strong> ${text}`;
 
-        userMessageContainer.appendChild(userImage);
-        userMessageContainer.appendChild(userMessageDiv);
-        this.chatHistory.appendChild(userMessageContainer);
+        messageContainer.appendChild(profileImage);
+        messageContainer.appendChild(messageDiv);
+        this.chatHistory.appendChild(messageContainer);
 
-        // Scroll to the bottom of chat history
+        // Scroll to the bottom of the chat history
         this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
     }
 
-    appendBotResponse() {
-        const responseMessageContainer = document.createElement('div');
-        responseMessageContainer.classList.add('d-flex', 'align-items-start', 'mb-3', 'fade-up');
+    /**
+     * Simulates a bot response.
+     */
+    simulateBotResponse() {
+        // Show loading indicator
+        const loadingIndicator = this.createLoadingIndicator();
+        this.chatHistory.appendChild(loadingIndicator);
+
+        // Simulate a delay for the bot response
+        setTimeout(() => {
+            // Remove loading indicator
+            this.chatHistory.removeChild(loadingIndicator);
+
+            // Append bot response
+            const botResponse = this.generateBotResponse();
+            this.appendMessage(botResponse, false);
+
+            // Append regenerate button
+            this.appendRegenerateButton();
+        }, 1000); // 1-second delay
+    }
+
+    /**
+     * Creates a loading indicator.
+     * @returns {HTMLElement} - The loading indicator element.
+     */
+    createLoadingIndicator() {
+        const loadingContainer = document.createElement('div');
+        loadingContainer.classList.add('d-flex', 'align-items-start', 'mb-3', 'fade-up');
 
         const botImage = document.createElement('img');
-        botImage.src = '/static/images/pfpbot.png'; // Bot profile image
+        botImage.src = '/static/images/pfpbot.png';
         botImage.alt = 'Fluwd';
         botImage.classList.add('rounded-circle', 'me-2');
         botImage.style.width = '40px';
         botImage.style.marginTop = '0.5rem';
 
-        const responseMessageDiv = document.createElement('div');
-        responseMessageDiv.classList.add('alert', 'text-start', 'flex-grow-1');
-        responseMessageDiv.style.backgroundColor = '#ffffff';
-        responseMessageDiv.style.color = '#000000';
-        responseMessageDiv.style.border = '1px solid #dee2e6';
-        responseMessageDiv.style.borderRadius = '0.25rem';
-        responseMessageDiv.innerHTML = `
-            <strong>Fluwd:</strong>
-            <p>To resolve issues of a delayed project schedule, consider implementing the following strategies:</p>
-            <p><strong>Strategies to Resolve Delayed Project Schedules</strong></p>
-            <ol>
-                <li>
-                    <strong>Conduct a Root Cause Analysis</strong><br>
-                    Identify the reasons behind the delays. Common causes can include scope creep, resource shortages, technical challenges, or inadequate planning.
-                </li>
-                <li>
-                    <strong>Re-Evaluate and Adjust the Project Plan</strong><br>
-                    <ul>
-                        <li>Break Down Tasks: Ensure tasks are broken down into smaller, manageable units.</li>
-                        <li>Prioritise Tasks: Focus on critical path activities that directly impact the project deadline.</li>
-                        <li>Update Schedule: Adjust timelines based on current progress and realistic estimates.</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Improve Communication</strong><br>
-                    <ul>
-                        <li>Regular Updates: Hold frequent status meetings to track progress and identify issues early.</li>
-                        <li>Clear Channels: Ensure there are clear communication channels among team members, stakeholders, and management.</li>
-                    </ul>
-                </li>
-            </ol>
-        `;
+        const loadingDiv = document.createElement('div');
+        loadingDiv.classList.add('alert', 'text-start', 'flex-grow-1');
+        loadingDiv.style.backgroundColor = '#ffffff';
+        loadingDiv.style.border = '1px solid #dee2e6';
+        loadingDiv.style.borderRadius = '0.25rem';
+        loadingDiv.innerHTML = `<strong>Fluwd:</strong> Thinking...`;
 
-        responseMessageContainer.appendChild(botImage);
-        responseMessageContainer.appendChild(responseMessageDiv);
-        this.chatHistory.appendChild(responseMessageContainer);
+        loadingContainer.appendChild(botImage);
+        loadingContainer.appendChild(loadingDiv);
 
-        // Scroll to the bottom of chat history
-        this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
+        return loadingContainer;
     }
 
+    /**
+     * Generates a simulated bot response.
+     * @returns {string} - The bot response.
+     */
+    generateBotResponse() {
+        return `
+            To resolve issues of a delayed project schedule, consider implementing the following strategies:
+            <ol>
+                <li><strong>Conduct a Root Cause Analysis:</strong> Identify the reasons behind the delays.</li>
+                <li><strong>Re-Evaluate and Adjust the Project Plan:</strong> Break down tasks and prioritize critical activities.</li>
+                <li><strong>Improve Communication:</strong> Hold frequent status meetings and ensure clear communication channels.</li>
+            </ol>
+        `;
+    }
+
+    /**
+     * Appends a "Regenerate Response" button to the chat history.
+     */
     appendRegenerateButton() {
         const regenerateContainer = document.createElement('div');
         regenerateContainer.classList.add('text-center', 'mt-3', 'mb-4');
@@ -144,3 +196,12 @@ class ChatApp {
     }
 }
 
+// Initialize the chat app when the DOM is loaded
+/*
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const chatApp = new ChatApp();
+    } catch (error) {
+        console.error('Failed to initialize ChatApp:', error.message);
+    }
+});*/
