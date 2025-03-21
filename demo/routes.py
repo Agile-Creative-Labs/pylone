@@ -39,7 +39,7 @@ AJAX_DATA_ROUTE = "/ajax/data"
 AJAX_DEMO_ROUTE = "/ajax-demo"
 
 # Authentication routes
-router.add_route("/", auth_controller.welcome, methods=["GET", "POST"])  # Default route to login page
+router.add_route("/", auth_controller.login, methods=["GET", "POST"])  # Default route to login page
 router.add_route(LOGIN_ROUTE, auth_controller.login, methods=["GET", "POST"])  # Login page
 router.add_route(REGISTER_ROUTE, auth_controller.register, methods=["GET", "POST"])  # User registration page
 router.add_route("/logout", dashboard_controller.logout, methods=["GET"])  # Logout route

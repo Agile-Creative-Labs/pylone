@@ -1,61 +1,15 @@
-        body {
-            background-color: #f5f5f7;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .index-container {
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 560px;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 28px;
-            margin-bottom: 30px;
-            font-weight: 400;
-            color: #1d1d1f;
-        }
-
-        p {
-            font-size: 17px;
-            margin-bottom: 20px;
-            color: #555;
-        }
-
-        .logout-button {
-            background-color: #0071e3;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 24px;
-            font-size: 17px;
-            font-weight: 400;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            width: 100%;
-            max-width: 200px;
-            margin-bottom: 30px;
-        }
-
-        .logout-button:hover {
-            background-color: #0077ED;
-        }
-
-        .logout-button:active {
-            background-color: #0062C3;
-        }
-
-/*login */
-.login-container {
+   body {
+      background-color: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .registration-container {
       background-color: white;
       border-radius: 20px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -66,8 +20,8 @@
     }
     
     .apple-logo {
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       margin-bottom: 10px;
     }
     
@@ -85,14 +39,28 @@
       color: #1d1d1f;
     }
     
-    .input-container {
-      position: relative;
+    .subtitle {
+      color: #86868b;
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+    
+    .form-group {
       margin-bottom: 20px;
+      text-align: left;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #1d1d1f;
+      font-size: 14px;
+      font-weight: 500;
+      padding-left: 5px;
     }
     
     .apple-input {
       width: 100%;
-      max-width: 480px;
       padding: 15px;
       border-radius: 10px;
       border: 1px solid #d2d2d7;
@@ -106,33 +74,17 @@
       box-shadow: 0 0 0 4px rgba(0, 125, 250, 0.1);
     }
     
-    .arrow-button {
-      position: absolute;
-      right: 45px;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: #e8e8ed;
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+    .name-inputs {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: #86868b;
-      transition: background-color 0.2s;
-    }
-    
-    .arrow-button:hover {
-      background-color: #d9d9de;
+      gap: 15px;
     }
     
     .checkbox-container {
-      margin-bottom: 30px;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-start;
+      text-align: left;
+      margin-bottom: 20px;
+      margin-top: 30px;
     }
     
     .apple-checkbox {
@@ -144,6 +96,7 @@
       margin-right: 10px;
       position: relative;
       cursor: pointer;
+      margin-top: 2px;
     }
     
     .apple-checkbox:checked:after {
@@ -157,7 +110,13 @@
       border-radius: 1px;
     }
     
-    .login-button {
+    .checkbox-label {
+      font-size: 14px;
+      color: #86868b;
+      line-height: 1.4;
+    }
+    
+    .submit-button {
       background-color: #0071e3;
       color: white;
       border: none;
@@ -170,13 +129,14 @@
       width: 100%;
       max-width: 200px;
       margin-bottom: 30px;
+      margin-top: 20px;
     }
     
-    .login-button:hover {
+    .submit-button:hover {
       background-color: #0077ED;
     }
     
-    .login-button:active {
+    .submit-button:active {
       background-color: #0062C3;
     }
     
@@ -196,11 +156,49 @@
       text-decoration: underline;
     }
     
+    .terms {
+      font-size: 12px;
+      color: #86868b;
+      margin-top: 30px;
+      line-height: 1.4;
+    }
+    
+    .terms a {
+      color: #0070c9;
+      text-decoration: none;
+    }
+    
+    .terms a:hover {
+      text-decoration: underline;
+    }
+    
     .dot {
       position: absolute;
       width: 12px;
       height: 12px;
       border-radius: 50%;
     }
-
     
+    .error-message {
+      color: #ff3b30;
+      font-size: 12px;
+      text-align: left;
+      margin-top: 5px;
+      padding-left: 5px;
+      display: none;
+    }
+    
+    /* Helper for showing strength indicator */
+    .password-strength {
+      height: 4px;
+      background-color: #f0f0f0;
+      margin-top: 10px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .strength-meter {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s, background-color 0.3s;
+    }

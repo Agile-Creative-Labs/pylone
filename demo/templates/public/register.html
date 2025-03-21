@@ -1,8 +1,6 @@
+<!-- template -->
 {% extends "base.html" %}
-
 {% block content %}
-<h1>Register</h1>
-
 {% if message %}
 <p style="color: green;">{{ message }}</p>
 {% endif %}
@@ -10,18 +8,229 @@
 {% if error %}
 <p style="color: red;">{{ error }}</p>
 {% endif %}
-<div class="login-container">
-<form method="POST">
-    <label for="username">Username:</label>
-    <input type="text" class="form-control mb-3" name="username" required><br>
-
-    <label for="password">Password:</label>
-    <input type="password" class="form-control mb-3" name="password" required><br>
-
-    <button type="submit">Register</button>
-</form>
-<a href="/login"> Login </a>
-</div>
+  <div class="registration-container">
+    <div class="colored-dots" id="colored-dots">
+        <!--
+      <svg class="apple-logo" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.197-2.12-9.973-3.17-14.34-3.17-4.58 0-9.492 1.05-14.746 3.17-5.262 2.13-9.501 3.24-12.742 3.35-4.929 0.21-9.842-1.96-14.746-6.52-3.13-2.73-7.045-7.41-11.735-14.04-5.032-7.08-9.169-15.29-12.41-24.65-3.471-10.11-5.211-19.9-5.211-29.378 0-10.857 2.346-20.221 7.045-28.068 3.693-6.303 8.606-11.275 14.755-14.925s12.793-5.51 19.948-5.629c3.915 0 9.049 1.211 15.429 3.591 6.362 2.388 10.447 3.599 12.238 3.599 1.339 0 5.877-1.416 13.57-4.239 7.275-2.618 13.415-3.702 18.445-3.275 13.63 1.1 23.87 6.473 30.68 16.153-12.19 7.386-18.22 17.731-18.1 31.002 0.11 10.337 3.86 18.939 11.23 25.769 3.34 3.17 7.07 5.62 11.22 7.36-0.9 2.61-1.85 5.11-2.86 7.51zM119.11 7.24c0 8.102-2.96 15.667-8.86 22.669-7.12 8.324-15.732 13.134-25.071 12.375-0.119-0.972-0.188-1.995-0.188-3.07 0-7.778 3.386-16.102 9.399-22.908 3.002-3.446 6.82-6.311 11.45-8.597 4.62-2.252 8.99-3.497 13.1-3.71 0.12 1.083 0.17 2.166 0.17 3.24z" fill="#000"/>
+      </svg> -->
+      <img src="/static/images/acl_b&w_logo.svg" alt="Your description" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" class="apple-logo"/>
+    </div>
+    
+    <h1>Create Fluwd ID</h1>
+    <p class="subtitle">One Fluwd ID is all you need to access all Fluwd services.</p>
+    
+    <form id="registration-form">
+      <div class="name-inputs">
+  <!--
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" class="apple-input" required>
+          <div class="error-message" id="firstName-error">Please enter your first name</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" class="apple-input" required>
+          <div class="error-message" id="lastName-error">Please enter your last name</div>
+        </div>
+        -->
+      </div>
+        <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="apple-input" required>
+        <div class="error-message" id="email-error">Please enter a valid email address</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="apple-input" required placeholder="Must be at least 8 characters">
+        <div class="password-strength">
+          <div class="strength-meter" id="strength-meter"></div>
+        </div>
+        <div class="error-message" id="password-error">Password must be at least 8 characters</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" class="apple-input" required>
+        <div class="error-message" id="confirmPassword-error">Passwords do not match</div>
+      </div>
+  <!--
+      <div class="form-group">
+        <label for="birthdate">Date of Birth</label>
+        <input type="date" id="birthdate" class="apple-input" required>
+        <div class="error-message" id="birthdate-error">Please enter your date of birth</div>
+      </div>
+-->
+      <div class="checkbox-container">
+        <input type="checkbox" id="terms" class="apple-checkbox" required>
+        <label for="terms" class="checkbox-label">I have read and agree to Fluwd's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+      <!--
+      <div class="checkbox-container">
+        <input type="checkbox" id="announcements" class="apple-checkbox">
+        <label for="announcements" class="checkbox-label">I would like to receive Apple news, product announcements, and special offers via email</label>
+      </div>
+      -->
+      <button type="submit" class="submit-button">Continue</button>
+      
+      <div class="terms">
+        By creating an Fluwd ID, you consent to Fluwd's <a href="#">Privacy Policy</a> and <a href="#">Terms & Conditions</a> that govern your use of Fluwd services. Learn more about how Fluwd manages your information in our <a href="#">Privacy Policy</a>.
+      </div>
+      
+      <div class="footer-links">
+        <a href="/login" class="apple-link">Already have an Fluwd ID? Sign in</a>
+      </div>
+    </form>
+  </div>
+   <script>
+    document.addEventListener('DOMContentLoaded', function() 
+    {
+      const dotsContainer = document.getElementById('colored-dots');
+      const colors = [
+        '#ff9500', '#ff9500', '#ff9500', 
+        '#ff3b30', '#ff3b30', '#ff3b30', 
+        '#ff2d55', '#ff2d55', '#ff2d55', 
+        '#af52de', '#af52de', '#af52de', 
+        '#5856d6', '#5856d6', '#5856d6', 
+        '#007aff', '#007aff', '#007aff', 
+        '#54c7fc', '#54c7fc', '#54c7fc',
+        '#e0e0e0', '#e0e0e0', '#e0e0e0'
+      ];
+      
+      // Create dots in a circular pattern
+      const totalDots = colors.length;
+      const radius = 60;
+      const centerX = 80;
+      const centerY = 80;
+      
+      for (let i = 0; i < totalDots; i++) {
+        const angle = (i / totalDots) * 2 * Math.PI;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+        dot.style.backgroundColor = colors[i];
+        
+        dotsContainer.appendChild(dot);
+      }
+      
+      // Handle checkbox functionality
+      const checkboxes = document.querySelectorAll('.apple-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          this.classList.toggle('checked');
+        });
+      });
+      
+      // Password strength meter
+      const passwordInput = document.getElementById('password');
+      const strengthMeter = document.getElementById('strength-meter');
+      
+      passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        if (password.length >= 8) strength += 25;
+        if (password.match(/[A-Z]/)) strength += 25;
+        if (password.match(/[0-9]/)) strength += 25;
+        if (password.match(/[^A-Za-z0-9]/)) strength += 25;
+        
+        strengthMeter.style.width = strength + '%';
+        
+        if (strength <= 25) {
+          strengthMeter.style.backgroundColor = '#ff3b30'; // Red
+        } else if (strength <= 50) {
+          strengthMeter.style.backgroundColor = '#ff9500'; // Orange
+        } else if (strength <= 75) {
+          strengthMeter.style.backgroundColor = '#ffcc00'; // Yellow
+        } else {
+          strengthMeter.style.backgroundColor = '#34c759'; // Green
+        }
+      });
+      
+      // Form validation
+      const form = document.getElementById('registration-form');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let isValid = true;
+        
+        // Reset error messages
+        const errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(msg => {
+          msg.style.display = 'none';
+        });
+        
+        // Validate first name
+        /*
+        const firstName = document.getElementById('firstName');
+        if (!firstName.value.trim()) {
+          document.getElementById('firstName-error').style.display = 'block';
+          firstName.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate last name
+        const lastName = document.getElementById('lastName');
+        if (!lastName.value.trim()) {
+          document.getElementById('lastName-error').style.display = 'block';
+          lastName.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        */
+        // Validate email
+        const email = document.getElementById('email');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value)) {
+          document.getElementById('email-error').style.display = 'block';
+          email.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate password
+        if (passwordInput.value.length < 8) {
+          document.getElementById('password-error').style.display = 'block';
+          passwordInput.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate password confirmation
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          document.getElementById('confirmPassword-error').style.display = 'block';
+          confirmPasswordInput.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        
+        // Validate birthdate
+        /*
+        const birthdate = document.getElementById('birthdate');
+        if (!birthdate.value) {
+          document.getElementById('birthdate-error').style.display = 'block';
+          birthdate.style.borderColor = '#ff3b30';
+          isValid = false;
+        }
+        */
+        // Submit if valid
+        if (isValid) {
+          alert('Registration successful! A verification email will be sent to ' + email.value);
+          form.reset();
+        }
+      });
+      
+      // Reset validation styling on input
+      const inputs = document.querySelectorAll('.apple-input');
+      inputs.forEach(input => {
+        input.addEventListener('input', function() {
+          this.style.borderColor = '#d2d2d7';
+        });
+      });
+    });
+  </script>
 {% endblock %}
-
-

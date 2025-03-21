@@ -63,30 +63,6 @@ class AuthController:
     def welcome(self, request):
         return Response(self.template_engine.render("public/welcome.html", {"error": ""}))
 
-    def __login(self, request):
-        """Handles the login page."""
-        if request.method == "POST":
-            username = request.get("username")
-            password = request.get("password")
-            user = db.get_user(username)  # Fetch user from DB
-
-            if user and user[2] == password:  # Check if password matches
-                # Create a session for the user
-                session_id = session_manager.create_session(user[0])  # user[0] is the user ID
-                # Redirect to the dashboard with a session cookie
-                return Response(
-                    "",
-                    status=302,
-                    headers=[("Location", "/dashboard")],
-                    cookies={"session_id": session_id}
-                )
-            else:
-                # Re-render login page with an error message
-                return Response(self.template_engine.render("public/login.html", {"error": "Invalid username or password."}))
-        
-        # Render login form
-        return Response(self.template_engine.render("public/login.html", {"error": ""}))
-    
     def register(self, request):
         """Handles the registration page."""
         logging.debug("Handling register request")
@@ -159,48 +135,6 @@ class AuthController:
             headers={"Content-Type": "application/json"}
         )
 
-    def ____login(self, request):
-        """Handles the login page and login requests."""
-        if request.method == "POST":
-            try:
-                # Access the request body correctly
-                request_body = request.get_body()  # Use the correct method to get the body
-                if not request_body:
-                    logging.error("Empty request body for POST /login")
-                    return self.json_response({"error": "Empty request body."}, status=400)
-
-                # Explicitly parse JSON payload
-                request_data = json.loads(request_body.decode("utf-8"))
-                username = request_data.get("username")
-                password = request_data.get("password")
-
-                logging.debug(f"POST Request Data: Username: {username}")
-
-                if not username or not password:
-                    return self.json_response({"error": "Username and password are required."}, status=400)
-
-                # Validate user credentials
-                user = db.get_user(username)
-                if user and len(user) >= 3 and self.verify_password(password, user[2]):
-                    session_id = session_manager.create_session(user[0])
-                    return self.json_response({"message": "Login successful!", "redirect": "/dashboard"}, status=200)
-
-                return self.json_response({"error": "Invalid username or password."}, status=401)
-            except json.JSONDecodeError:
-                logging.error("Invalid JSON in request body")
-                return self.json_response({"error": "Invalid JSON format."}, status=400)
-            except Exception as e:
-                logging.error(f"Error in login: {e}")
-                logging.error(traceback.format_exc())
-                return self.json_response({"error": "Internal server error."}, status=500)
-
-        elif request.method == "GET":
-            return Response(
-                self.template_engine.render("public/login.html", {"error": ""}),
-                headers={"Content-Type": "text/html"}
-            )
-
-        return self.json_response({"error": "Method not allowed."}, status=405)
 
     def _json_response(self, data, status=200):
         response = {
@@ -215,55 +149,6 @@ class AuthController:
         # Implement password hashing and verification logic here
         return input_password == stored_password  # Placeholder: Replace with actual verification
 
-    def vlogin(self, request):
-        """Handles the login page and login requests."""
-        if request.method == "POST":
-            try:
-                # The body is already parsed in the Request class and available as request.body
-                request_data = request.body
-            
-                # If the body wasn't correctly parsed as JSON in the Request class
-                if not isinstance(request_data, dict):
-                    logging.error("Empty or invalid request body for POST /login")
-                    return self.json_response({"error": "Empty or invalid request body."}, status=400)
-                
-                username = request_data.get("username")
-                password = request_data.get("password")
-                logging.debug(f"POST Request Data: Username: {username}")
-            
-                # Validate user credentials
-                user = db.get_user(username)
-                logging.debug(f"User lookup result: {user}")
-
-                # First check if user exists
-                if not user:
-                    return self.json_response({"error": "User not found"}, status=401)
-
-                # Then check if user data has enough elements
-                if len(user) < 3:
-                    logging.error(f"Invalid user data format: {user}")
-                    return self.json_response({"error": "Internal server error"}, status=500)
-
-                # Finally verify password
-                if not self.verify_password(password, user[2]):
-                    return self.json_response({"error": "Invalid password"}, status=401)
-
-                # If all checks pass, create session and return success
-                session_id = session_manager.create_session(user[0])
-                return self.json_response({"message": "Login successful!", "redirect": "/dashboard"}, status=200)
-            
-            except Exception as e:
-                logging.error(f"Error in login: {e}")
-                logging.error(traceback.format_exc())
-                return self.json_response({"error": "Internal server error."}, status=500)
-    
-        elif request.method == "GET":
-            return Response(
-                self.template_engine.render("public/login.html", {"error": ""}),
-                headers={"Content-Type": "text/html"}
-            )
-    
-        return self.json_response({"error": "Method not allowed."}, status=405)
 
     def login(self, request):
         """Handles the login page and login requests."""
