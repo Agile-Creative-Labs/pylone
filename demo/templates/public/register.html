@@ -22,19 +22,7 @@
     
     <form id="registration-form">
       <div class="name-inputs">
-  <!--
-        <div class="form-group">
-          <label for="firstName">First Name</label>
-          <input type="text" id="firstName" class="apple-input" required>
-          <div class="error-message" id="firstName-error">Please enter your first name</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" class="apple-input" required>
-          <div class="error-message" id="lastName-error">Please enter your last name</div>
-        </div>
-        -->
+
       </div>
         <div class="form-group">
         <label for="email">Email</label>
@@ -56,23 +44,12 @@
         <input type="password" id="confirmPassword" class="apple-input" required>
         <div class="error-message" id="confirmPassword-error">Passwords do not match</div>
       </div>
-  <!--
-      <div class="form-group">
-        <label for="birthdate">Date of Birth</label>
-        <input type="date" id="birthdate" class="apple-input" required>
-        <div class="error-message" id="birthdate-error">Please enter your date of birth</div>
-      </div>
--->
+
       <div class="checkbox-container">
         <input type="checkbox" id="terms" class="apple-checkbox" required>
         <label for="terms" class="checkbox-label">I have read and agree to Fluwd's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
       </div>
-      <!--
-      <div class="checkbox-container">
-        <input type="checkbox" id="announcements" class="apple-checkbox">
-        <label for="announcements" class="checkbox-label">I would like to receive Apple news, product announcements, and special offers via email</label>
-      </div>
-      -->
+
       <button type="submit" class="submit-button">Continue</button>
       
       <div class="terms">
@@ -85,6 +62,119 @@
     </form>
   </div>
    <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('registration-form');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const strengthMeter = document.getElementById('strength-meter');
+
+    // Password Strength Meter
+    passwordInput.addEventListener('input', function () {
+        const password = this.value;
+        let strength = 0;
+
+        if (password.length >= 8) strength += 25;
+        if (password.match(/[A-Z]/)) strength += 25;
+        if (password.match(/[0-9]/)) strength += 25;
+        if (password.match(/[^A-Za-z0-9]/)) strength += 25;
+
+        strengthMeter.style.width = strength + '%';
+
+        if (strength <= 25) {
+            strengthMeter.style.backgroundColor = '#ff3b30'; // Red
+        } else if (strength <= 50) {
+            strengthMeter.style.backgroundColor = '#ff9500'; // Orange
+        } else if (strength <= 75) {
+            strengthMeter.style.backgroundColor = '#ffcc00'; // Yellow
+        } else {
+            strengthMeter.style.backgroundColor = '#34c759'; // Green
+        }
+    });
+
+    // Form Submit Handler
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault(); // Prevent form from refreshing the page
+
+        let isValid = true;
+
+        // Reset error messages
+        const errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach((msg) => {
+            msg.style.display = 'none';
+        });
+
+        // Validate email
+        const email = document.getElementById('email');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value)) {
+            document.getElementById('email-error').style.display = 'block';
+            email.style.borderColor = '#ff3b30';
+            isValid = false;
+        }
+
+        // Validate password length
+        if (passwordInput.value.length < 8) {
+            document.getElementById('password-error').style.display = 'block';
+            passwordInput.style.borderColor = '#ff3b30';
+            isValid = false;
+        }
+
+        // Validate password confirmation
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            document.getElementById('confirmPassword-error').style.display = 'block';
+            confirmPasswordInput.style.borderColor = '#ff3b30';
+            isValid = false;
+        }
+
+        // Stop if validation fails
+        if (!isValid) {
+            return;
+        }
+
+        // Prepare form data
+        const data = {
+            email: email.value.trim(),
+            password: passwordInput.value
+        };
+
+        try {
+            // Send POST request to backend
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            // Handle success or error response from the backend
+            if (response.ok) {
+                alert(result.message || 'Registration successful!');
+                form.reset();
+                strengthMeter.style.width = '0%'; // Reset strength meter
+                window.location.href = '/login';
+            } else {
+                alert(result.error || 'An error occurred during registration.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An unexpected error occurred. Please try again later.');
+        }
+    });
+
+    // Reset input styles on change
+    const inputs = document.querySelectorAll('.apple-input');
+    inputs.forEach((input) => {
+        input.addEventListener('input', function () {
+            this.style.borderColor = '#d2d2d7';
+        });
+    });
+});
+
+/*
     document.addEventListener('DOMContentLoaded', function() 
     {
       const dotsContainer = document.getElementById('colored-dots');
@@ -169,22 +259,7 @@
         });
         
         // Validate first name
-        /*
-        const firstName = document.getElementById('firstName');
-        if (!firstName.value.trim()) {
-          document.getElementById('firstName-error').style.display = 'block';
-          firstName.style.borderColor = '#ff3b30';
-          isValid = false;
-        }
-        
-        // Validate last name
-        const lastName = document.getElementById('lastName');
-        if (!lastName.value.trim()) {
-          document.getElementById('lastName-error').style.display = 'block';
-          lastName.style.borderColor = '#ff3b30';
-          isValid = false;
-        }
-        */
+   
         // Validate email
         const email = document.getElementById('email');
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -208,15 +283,7 @@
           isValid = false;
         }
         
-        // Validate birthdate
-        /*
-        const birthdate = document.getElementById('birthdate');
-        if (!birthdate.value) {
-          document.getElementById('birthdate-error').style.display = 'block';
-          birthdate.style.borderColor = '#ff3b30';
-          isValid = false;
-        }
-        */
+      
         // Submit if valid
         if (isValid) {
           alert('Registration successful! A verification email will be sent to ' + email.value);
@@ -231,6 +298,6 @@
           this.style.borderColor = '#d2d2d7';
         });
       });
-    });
+    });*/
   </script>
 {% endblock %}
