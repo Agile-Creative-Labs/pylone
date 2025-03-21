@@ -1,0 +1,26 @@
+{# This is a Jinja2 comment and will not be parsed as part of the template #}
+{#
+{% extends "private_base.html" %}
+{% block private_content %}
+<h1>Dashboard</h1>
+{% endblock %}
+#}
+
+{% extends "private_base.html" %}
+{% block private_content %}
+<h1>Dashboard</h1>
+  <h1>WebSocket Test Client</h1>
+
+    <div id="status" class="connection-status disconnected">Disconnected</div>
+    
+    <div id="messageContainer"></div>
+    
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button id="sendButton">Send</button>
+    
+    <div>
+        <button id="connectButton">Connect</button>
+        <button id="disconnectButton">Disconnect</button>
+    </div>
+
+{% endblock %}

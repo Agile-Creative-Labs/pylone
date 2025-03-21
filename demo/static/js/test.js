@@ -180,5 +180,4 @@ class App
     }
 }
 
-// Initialize the App once DOM is loaded
-document.addEventListener('DOMContentLoaded', () => new App());
+

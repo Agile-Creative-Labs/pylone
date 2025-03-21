@@ -1,6 +1,6 @@
 class WebSocketChat {
     constructor() {
-        this.socket = null;
+        // Cache DOM elements
         this.messageContainer = document.getElementById('messageContainer');
         this.messageInput = document.getElementById('messageInput');
         this.sendButton = document.getElementById('sendButton');
@@ -9,18 +9,32 @@ class WebSocketChat {
         this.statusDisplay = document.getElementById('status');
 
         // Validate required DOM elements
-        if (
-            !this.messageContainer ||
-            !this.messageInput ||
-            !this.sendButton ||
-            !this.connectButton ||
-            !this.disconnectButton ||
-            !this.statusDisplay
-        ) {
-            throw new Error('One or more required DOM elements are missing.');
-        }
+        this.validateElements();
 
+        // Initialize WebSocket and event listeners
+        this.socket = null;
         this.initializeEventListeners();
+    }
+
+    /**
+     * Validates that all required DOM elements exist.
+     * Throws an error if any element is missing.
+     */
+    validateElements() {
+        const elements = {
+            messageContainer: this.messageContainer,
+            messageInput: this.messageInput,
+            sendButton: this.sendButton,
+            connectButton: this.connectButton,
+            disconnectButton: this.disconnectButton,
+            statusDisplay: this.statusDisplay,
+        };
+
+        for (const [name, element] of Object.entries(elements)) {
+            if (!element) {
+                throw new Error(`Required element "${name}" is missing.`);
+            }
+        }
     }
 
     /**
@@ -125,6 +139,3 @@ class WebSocketChat {
         });
     }
 }
-
-
-
