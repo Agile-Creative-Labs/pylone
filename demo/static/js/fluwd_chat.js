@@ -39,178 +39,235 @@
  */
 class FluwdChatApp 
 {
-  constructor(options = {}) 
-  {
-    // Default settings
-    this.settings = Object.assign(
-      {
-        url: '',
-        reconnectAttempts: 5,
-        reconnectDelay: 3000,
-        inactivityTimeout: 30000,
-        autoReconnect: true,
-        debug: false,
-      },
-      options
-    );
+    constructor(options = {}) 
+    {
+        // Default settings
+        this.settings = Object.assign({
+                url: '',
+                reconnectAttempts: 5,
+                reconnectDelay: 3000,
+                inactivityTimeout: 30000,
+                autoReconnect: true,
+                debug: false,
+            },
+            options
+        );
 
-    // DOM elements
-    this.chatForm = document.getElementById('chat-form');
-    this.chatInput = document.getElementById('chat-input');
-    this.messages = document.getElementById('messages');
-    this.welcomeCard = document.querySelector('.welcome-card');
-    this.featureContainer = document.querySelector('.feature-container');
-    this.chatContainer = document.querySelector('.chat-container');
+        // DOM elements
+        this.chatForm = document.getElementById('chat-form');
+        this.chatInput = document.getElementById('chat-input');
+        this.messages = document.getElementById('messages');
+        this.welcomeCard = document.querySelector('.welcome-card');
+        this.featureContainer = document.querySelector('.feature-container');
+        this.chatContainer = document.querySelector('.chat-container');
+        this.statusDisplay = document.getElementById('status');
 
-    // WebSocket properties
-    this.socket = null;
-    this.reconnectAttempts = 0;
-    this.inactivityTimer = null;
+        // WebSocket properties
+        this.socket = null;
+        this.reconnectAttempts = 0;
+        this.inactivityTimer = null;
 
-    // Bind methods
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.scrollToBottom = this.scrollToBottom.bind(this);
+        // Bind methods
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.scrollToBottom = this.scrollToBottom.bind(this);
 
-    // Initialize
-    this.initEventListeners();
-    setTimeout(this.scrollToBottom, 100);
-    this.initWebSocket();
-  }
-
-  initEventListeners() 
-  {
-    this.chatForm.addEventListener('submit', this.handleSubmit);
-    window.addEventListener('load', () => setTimeout(this.scrollToBottom, 200));
-  }
-
-  initWebSocket() 
-  {
-    if (!this.settings.url) return;
-    this.log('Connecting to WebSocket...');
-    this.socket = new WebSocket(this.settings.url);
-
-    this.socket.onopen = () => {
-      this.log('WebSocket connected.');
-      this.reconnectAttempts = 0;
-      this.resetInactivityTimer();
-    };
-
-    this.socket.onmessage = (event) => {
-      this.resetInactivityTimer();
-      this.addBotMessage(event.data);
-    };
-
-    this.socket.onclose = () => {
-      this.log('WebSocket disconnected.');
-      if (this.settings.autoReconnect && this.reconnectAttempts < this.settings.reconnectAttempts) {
-        this.reconnectAttempts++;
-        setTimeout(() => this.initWebSocket(), this.settings.reconnectDelay);
-      }
-    };
-
-    this.socket.onerror = (error) => {
-      this.log('WebSocket error:', error);
-    };
-  }
-
-  handleSubmit(e) 
-  {
-    e.preventDefault();
-    const message = this.chatInput.value.trim();
-    if (!message) return;
-
-    this.addUserMessage(message);
-    this.transitionToChatView(() => {
-      this.showBotTyping();
-      this.sendMessage(message);
-    });
-    this.chatInput.value = '';
-  }
-
-  sendMessage(message) 
-  {
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(message);
-    } else {
-      this.log('WebSocket not connected. Falling back to local processing.');
-      this.processBotResponse(message);
+        // Initialize
+        this.initEventListeners();
+        setTimeout(this.scrollToBottom, 100);
+        this.initWebSocket();
     }
-  }
 
-  resetInactivityTimer() 
-  {
-    clearTimeout(this.inactivityTimer);
-    this.inactivityTimer = setTimeout(() => {
-      this.log('User inactive. Disconnecting WebSocket.');
-      this.socket?.close();
-    }, this.settings.inactivityTimeout);
-  }
+    initEventListeners() 
+    {
+        this.chatForm.addEventListener('submit', this.handleSubmit);
+        window.addEventListener('load', () => setTimeout(this.scrollToBottom, 200));
+    }
 
-  transitionToChatView(callback) 
-  {
-    this.featureContainer.style.opacity = '0';
-    this.welcomeCard.style.opacity = '0';
-    setTimeout(() => {
-      this.featureContainer.style.display = 'none';
-      this.welcomeCard.style.display = 'none';
-      this.chatContainer.style.display = 'block';
-      setTimeout(() => {
-        this.chatContainer.style.opacity = '1';
-        if (callback) callback();
-      }, 50);
-    }, 500);
-  }
+    initWebSocket() 
+    {
+        if (!this.settings.url) return;
+        this.log('Connecting to WebSocket...');
+        this.updateStatus('connecting');
+        this.socket = new WebSocket(this.settings.url);
 
-  addUserMessage(message) 
-  {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message-wrapper user-container';
-    messageDiv.innerHTML = `<div class="user-message">${this.sanitizeHTML(message)}</div><div class="user-icon"><i class="fas fa-user"></i></div>`;
-    this.messages.appendChild(messageDiv);
-    setTimeout(this.scrollToBottom, 50);
-  }
+        this.socket.onopen = () => {
+            this.log('WebSocket connected.');
+            this.updateStatus('connected');
+            this.reconnectAttempts = 0;
+            this.resetInactivityTimer();
+        };
 
-  addBotMessage(message) 
-  {
-    this.hideBotTyping();
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message-wrapper bot-container';
-    messageDiv.innerHTML = `<div class="bot-icon"><i class="fas fa-robot"></i></div><div class="bot-message">${this.sanitizeHTML(message)}</div>`;
-    this.messages.appendChild(messageDiv);
-    setTimeout(this.scrollToBottom, 50);
-  }
+        this.socket.onmessage = (event) => {
+            this.resetInactivityTimer();
+            this.addBotMessage(event.data);
+           
+        };
 
-  showBotTyping()
-  {
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'message-wrapper bot-container';
-    typingDiv.id = 'bot-typing';
-    typingDiv.innerHTML = `<div class="bot-icon"><i class="fas fa-robot"></i></div><div class="bot-message bot-typing"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
-    this.messages.appendChild(typingDiv);
-    this.scrollToBottom();
-  }
+        this.socket.onclose = () => {
+            this.log('WebSocket disconnected.');
+            this.updateStatus('disconnected');
+            if (this.settings.autoReconnect && this.reconnectAttempts < this.settings.reconnectAttempts) {
+                this.reconnectAttempts++;
+                setTimeout(() => this.initWebSocket(), this.settings.reconnectDelay);
+            }
+        };
 
-  hideBotTyping() 
-  {
-    document.getElementById('bot-typing')?.remove();
-  }
+        this.socket.onerror = (error) => {
+             this.updateStatus('error');
+            this.log('WebSocket error:', error);
+        };
+    }
 
-  scrollToBottom() 
-  {
-    requestAnimationFrame(() => {
-      this.messages.scrollTop = this.messages.scrollHeight;
-    });
-  }
+    handleSubmit(e) 
+    {
+        e.preventDefault();
+        const message = this.chatInput.value.trim();
+        if (!message) return;
 
-  sanitizeHTML(text) 
-  {
-    const element = document.createElement('div');
-    element.textContent = text;
-    return element.innerHTML;
-  }
+        this.addUserMessage(message);
+        this.transitionToChatView(() => {
+            this.showBotTyping();
+            this.sendMessage(message);
+        });
+        this.chatInput.value = '';
+    }
 
-  log(...args) 
-  {
-    if (this.settings.debug) console.log('[ChatApp]', ...args);
-  }
+    sendMessage(message)
+    {
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            this.socket.send(message);
+        } else {
+            this.log('WebSocket not connected. Falling back to local processing.');
+            this.processBotResponse(message);
+        }
+    }
+
+    resetInactivityTimer() 
+    {
+        clearTimeout(this.inactivityTimer);
+        this.inactivityTimer = setTimeout(() => {
+            this.log('User inactive. Disconnecting WebSocket.');
+            this.socket?.close();
+        }, this.settings.inactivityTimeout);
+    }
+
+    transitionToChatView(callback) 
+    {
+        this.featureContainer.style.opacity = '0';
+        this.welcomeCard.style.opacity = '0';
+        setTimeout(() => {
+            this.featureContainer.style.display = 'none';
+            this.welcomeCard.style.display = 'none';
+            this.chatContainer.style.display = 'block';
+            setTimeout(() => {
+                this.chatContainer.style.opacity = '1';
+                if (callback) callback();
+            }, 50);
+        }, 500);
+    }
+
+    addUserMessage(message) 
+    {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message-wrapper user-container';
+        messageDiv.innerHTML = `<div class="user-message">${this.sanitizeHTML(message)}</div><div class="user-icon"><i class="fas fa-user"></i></div>`;
+        this.messages.appendChild(messageDiv);
+        setTimeout(this.scrollToBottom, 50);
+    }
+
+    addBotMessage(message) 
+    {
+        this.hideBotTyping();
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message-wrapper bot-container';
+        messageDiv.innerHTML = `<div class="bot-icon"><i class="fas fa-robot"></i></div><div class="bot-message">${this.sanitizeHTML(message)}</div>`;
+        this.messages.appendChild(messageDiv);
+        setTimeout(this.scrollToBottom, 50);
+    }
+
+    showBotTyping() 
+    {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message-wrapper bot-container';
+        typingDiv.id = 'bot-typing';
+        typingDiv.innerHTML = `<div class="bot-icon"><i class="fas fa-robot"></i></div><div class="bot-message bot-typing"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+        this.messages.appendChild(typingDiv);
+        this.scrollToBottom();
+    }
+
+    hideBotTyping() 
+    {
+        document.getElementById('bot-typing')?.remove();
+    }
+
+    scrollToBottom() 
+    {
+        requestAnimationFrame(() => {
+            this.messages.scrollTop = this.messages.scrollHeight;
+        });
+    }
+
+    sanitizeHTML(text) 
+    {
+        const element = document.createElement('div');
+        element.textContent = text;
+        return element.innerHTML;
+    }
+
+    log(...args) 
+    {
+        if (this.settings.debug) console.log('[ChatApp]', ...args);
+    }
+
+    /**
+     * Updates the connection status display.
+     * @param {string} status - Connection status ('connected', 'connecting', 'disconnected', 'error')
+     */
+    updateStatus(status) 
+    {
+        const statusMap = {
+            'connected': {
+                text: 'Connected',
+                className: 'connected'
+            },
+            'connecting': {
+                text: 'Connecting...',
+                className: 'connecting'
+            },
+            'disconnected': {
+                text: 'Disconnected',
+                className: 'disconnected'
+            },
+            'error': {
+                text: 'Connection Error',
+                className: 'error'
+            },
+            'inactive': {
+                text: 'Inactive',
+                className: 'inactive'
+            }
+        };
+
+        const statusInfo = statusMap[status] || statusMap.disconnected;
+
+        this.statusDisplay.textContent = statusInfo.text;
+        this.statusDisplay.className = `connection-status ${statusInfo.className}`;
+        console.log(`Status updated: ${status}`);
+    }
+    /**
+     * Log debug information
+     * @param {string} message - Debug message
+     */
+    logDebug(message) 
+    {
+        if (this.config.debug) {
+            console.log(`[WebSocketChat] ${message}`);
+            if (this.debugLogs) {
+                const logEntry = document.createElement('div');
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                this.debugLogs.appendChild(logEntry);
+                this.debugLogs.scrollTop = this.debugLogs.scrollHeight;
+            }
+        }
+    }
 }

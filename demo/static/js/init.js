@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 
   const chat = new FluwdChatApp({
-    url: 'ws://127.0.0.1:8001/chat',
-    reconnectAttempts: 5,
-    reconnectDelay: 3000,
-    inactivityTimeout: 30000,
-    autoReconnect: true,
-    debug: false
+      url: 'ws://127.0.0.1:8001/chat',
+      reconnectAttempts: 5,
+      reconnectDelay: 3000,
+      inactivityTimeout: 30000,
+      autoReconnect: true,
+      debug: true
   });
 
 });
