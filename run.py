@@ -134,6 +134,7 @@ def shutdown_server(signal, frame):
 signal.signal(signal.SIGINT, shutdown_server)
 
 # Start the servers
+# TODO: modify the pylone/app_proxy.py and demo/app.py to support websocket disabling.
 if __name__ == '__main__':
     if args.no_ws:
         # Run only HTTP server if WebSocket is disabled
@@ -145,4 +146,3 @@ if __name__ == '__main__':
         print(f"Starting HTTP server on http://127.0.0.1:{args.port}")
         print(f"Starting WebSocket server on ws://127.0.0.1:{args.ws_port}")
         app.run(http_host="127.0.0.1", http_port=args.port, ws_host="127.0.0.1", ws_port=args.ws_port)
-        

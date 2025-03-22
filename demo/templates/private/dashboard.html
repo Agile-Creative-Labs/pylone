@@ -1,87 +1,74 @@
 {% extends "private_base.html" %}
 {% block private_content %}
-<!-- Main Content Area -->
-            <main class="col-md-10 ms-sm-auto col-lg-10 px-md-5 py-4">
-               <!-- Header Section -->
-               <div class="header-section d-flex justify-content-between align-items-center p-3 mb-4 shadow-sm bg-light rounded" style="margin-left: 15px; margin-right: 15px;">
-                  <div>
-                     <h4 class="mb-0 fw-bold">Welcome, Alexander</h4>
-                     <small>Today is Saturday, 11th November 2024.</small>
-                  </div>
-                  <div class="d-flex align-items-center">
-                     <i class="bi bi-bell-fill me-3" style="font-size: 1.5rem; cursor: pointer;"></i>
-                     <div class="dropdown">
-                        <div class="d-flex align-items-center" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-                           <img src="/static/images/pfpuser.png" alt="Profile Image" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
-                           <div>
-                              <p class="mb-0 fw-bold" style="font-size: 0.9rem;">Ruben Vetrov</p>
-                              <small>PMO</small>
-                           </div>
-                           <i class="bi bi-chevron-down ms-2"></i>
-                        </div>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                           <li><a class="dropdown-item" href="#">Profile</a></li>
-                           <li><a class="dropdown-item" href="#">Settings</a></li>
-                           <li>
-                              <hr class="dropdown-divider">
-                           </li>
-                           <li><a class="dropdown-item" href="#">Log Out</a></li>
-                        </ul>
-                     </div>
-                  </div>
-               </div>
-               <!-- Welcome Section -->
-               <div id="welcomeContainer" class="welcome-container mb-5" style="margin-left: 15px; margin-right: 15px;">
-                  <div class="welcome-section text-center p-4 shadow-sm">
-                     <div class="gradient-circle"></div>
-                     <h1 class="greeting mb-3">
-                        <span class="gradient-text">Hello, Alexander</span>
-                     </h1>
-                     <p class="lead mb-0">How can I help you today?</p>
-                  </div>
-               </div>
-               <!-- Action Cards Section -->
-               <div id="actionCardsContainer" class="d-flex justify-content-between mb-5 gap-4">
-                  <div class="card action-card text-center">
-                     <div class="card-body">
-                        <i class="bi bi-kanban display-4 mb-2"></i>
-                        <h5 class="card-title mt-3">Project Management</h5>
-                        <p class="card-text">Manage a new project</p>
-                     </div>
-                  </div>
-                  <div class="card action-card text-center">
-                     <div class="card-body">
-                        <i class="bi bi-file-earmark-text display-4 mb-2"></i>
-                        <h5 class="card-title mt-3">Documentation</h5>
-                        <p class="card-text">Create a project document</p>
-                     </div>
-                  </div>
-                  <div class="card action-card text-center">
-                     <div class="card-body">
-                        <i class="bi bi-exclamation-triangle display-4 mb-2"></i>
-                        <h5 class="card-title mt-3">Risk & Issue Management</h5>
-                        <p class="card-text">Provide recommendations to mitigate a critical risk</p>
-                     </div>
-                  </div>
-               </div>
-               <!-- Chat History Section -->
-               <div id="chatHistory" class="chat-history-container mt-4 aligned-container" style="margin-left: 15px; margin-right: 15px;"></div>
-               <!-- Regenerate Response Button Section -->
-               <div id="regenerateResponseContainer" class="text-center mb-4" style="margin-left: 15px; margin-right: 15px; display: none;">
-                  <button id="regenerateBtn" class="btn btn-outline-primary" style="border-radius: 50px; padding: 0.5rem 1.5rem; font-size: 1rem;">
-                     <i class="bi bi-arrow-clockwise me-2"></i> Regenerate response
-                  </button>
-               </div>
-               <!-- Chat Box Section -->
-               <div id="chatBoxContainer" class="welcome-container mb-5" style="margin-left: 15px; margin-right: 15px;">
-                  <div class="chat-box d-flex align-items-center">
-                     <i class="bi bi-mic me-3 text-muted" style="font-size: 1.5rem;"></i>
-                     <i class="bi bi-card-image me-3 text-muted" style="font-size: 1.5rem;"></i>
-                     <i class="bi bi-paperclip me-3 text-muted" style="font-size: 1.5rem;"></i>
-                     <input type="text" id="chatInput" class="form-control border-0" placeholder="What should I do to help resolve the issue of delayed project schedule?">
-                     <button id="sendBtn" class="btn btn-link text-muted ms-3"><i class="bi bi-send" style="font-size: 1.7rem;"></i></button>
-                  </div>
-               </div>
-            </main>
-            <!-- End Main Content Area -->
+<!-- Main Content -->
+    <div class="main-content">
+        <!-- Welcome Card -->
+        <div class="welcome-card d-flex align-items-center justify-content-center flex-column">
+            <div class="gradient-circle"></div>
+            <h2 class="greeting-text">Hello, Alexander</h2>
+            <h3 class="help-text">How can I help you today?</h3>
+        </div>
+        
+        <!-- Feature Cards -->
+        <div class="feature-container row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h4 class="mb-3">Project Management</h4>
+                    <p class="text-muted">Manage a new project</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h4 class="mb-3">Documentation</h4>
+                    <p class="text-muted">Create a project document</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h4 class="mb-3">Risk & Issue Management</h4>
+                    <p class="text-muted">Provide recommendations to mitigate a critical risk</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div id="messages">
+                <!-- Messages will be appended here -->
+            </div>
+        </div>
+        
+        <!-- Chat Box -->
+        <div class="chatbox">
+            <form id="chat-form">
+                <div class="d-flex align-items-center">
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-secondary border-end-0 rounded-start-pill">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary border-start-0 border-end-0">
+                            <i class="fas fa-image"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary border-start-0 border-end-0">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <input type="text" id="chat-input" class="form-control chat-input" placeholder="Type your message..." value="What should I do to help resolve the issue of delayed project schedule?">
+                        <button type="submit" class="btn send-btn rounded-end-pill" id="sendButton">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 {% endblock %}

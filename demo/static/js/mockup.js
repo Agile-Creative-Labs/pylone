@@ -76,7 +76,7 @@ class ChatApp {
      * @param {string} text - The message text.
      * @param {boolean} isSent - Whether the message was sent by the user.
      */
-    appendMessage(text, isSent) {
+    __appendMessage(text, isSent) {
         const messageContainer = document.createElement('div');
         messageContainer.classList.add('d-flex', 'align-items-start', 'mb-3', 'fade-up');
 
@@ -101,6 +101,39 @@ class ChatApp {
         // Scroll to the bottom of the chat history
         this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
     }
+     //
+    /**
+ * Appends a message to the chat history.
+ * @param {string} text - The message text.
+ * @param {boolean} isSent - Whether the message was sent by the user.
+ */
+
+appendMessage(text, isSent) {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('d-flex', 'align-items-start', 'mb-3', 'fade-up');
+
+    const profileImage = document.createElement('img');
+    profileImage.src = isSent ? '/static/images/pfpuser.png' : '/static/images/pfpbot.png';
+    profileImage.alt = isSent ? 'User' : 'Bot';
+    profileImage.classList.add('rounded-circle', 'me-2');
+    profileImage.style.width = '40px';
+    profileImage.style.marginTop = '0.5rem';
+
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('alert', 'text-start', 'flex-grow-1');
+    messageDiv.style.backgroundColor = isSent ? '#d1e7dd' : '#ffffff'; // Different colors for sent/received
+    messageDiv.style.border = '1px solid #dee2e6';
+    messageDiv.style.borderRadius = '0.25rem';
+    messageDiv.innerHTML = `<strong>${isSent ? 'You:' : 'Fluwd:'}</strong> ${text}`;
+
+    messageContainer.appendChild(profileImage);
+    messageContainer.appendChild(messageDiv);
+    this.chatHistory.appendChild(messageContainer);
+
+    // Scroll to the bottom of the chat history
+    this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
+}
+
 
     /**
      * Simulates a bot response.
@@ -196,12 +229,4 @@ class ChatApp {
     }
 }
 
-// Initialize the chat app when the DOM is loaded
-/*
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        const chatApp = new ChatApp();
-    } catch (error) {
-        console.error('Failed to initialize ChatApp:', error.message);
-    }
-});*/
+

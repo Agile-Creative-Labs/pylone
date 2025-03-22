@@ -1,0 +1,413 @@
+/*style-fluwd-v1.css*/
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f7;
+    padding-top: 80px; /* Account for fixed header */
+}
+
+/* Sidebar Styles */
+.sidebarXX {
+    height: 150vh;
+    background-color: #fbfbfd;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    position: fixed;
+    width: 250px;
+    z-index: 100;
+    border-radius: 20px;
+    overflow: hidden;
+    animation: slideInLeft 0.5s ease-out;
+    margin-right: 20px; /* Add space between sidebar and main content */
+}
+
+.sidebar {
+    height: calc(100vh - 20px); /* Adjust '20px' to your desired gap */
+    background-color: #fbfbfd;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    position: fixed;
+    width: 250px;
+    z-index: 100;
+    border-radius: 20px;
+    overflow-y: auto; /* Enables vertical scrolling if content exceeds height */
+    animation: slideInLeft 0.5s ease-out;
+    margin-right: 20px;
+    top: 20px; /* aligns the top of the sidebar with the gap amount */
+}
+
+/* Header Styles */
+.header {
+    background-color: #fbfbfd;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 290px; /* Adjusted to account for sidebar width and margin */
+    padding: 20px;
+    z-index: 99;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 0 0 20px 20px;
+    animation: slideInDown 0.5s ease-out;
+    margin-right: 20px; /* Add space on the right */
+}
+
+/* Main Content Styles */
+.main-content {
+    margin-left: 290px; /* Match sidebar width and margin */
+    padding: 20px;
+    padding-top: 0;
+    width: calc(100% - 290px - 20px); /* Adjust width to match header */
+    margin-right: 20px; /* Add space on the right */
+}
+
+/* Logo and Text Styles */
+.logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #007aff;
+}
+
+.nav-item {
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.nav-link {
+    color: #555;
+    padding: 12px 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-link:hover {
+    background-color: #f1f1f2;
+}
+
+.nav-link i {
+    width: 25px;
+}
+
+.notification-pill {
+    background-color: #007aff;
+    color: white;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* Welcome Card Styles */
+.welcome-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 30px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    animation: fadeInScale 0.5s ease-out;
+    animation-delay: 0.5s;
+    margin-right: 20px; /* Add space on the right */
+}
+
+/* Feature Card Styles */
+.feature-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 30px;
+    text-align: center;
+    height: 100%;
+    transition: all 0.3s;
+    margin-right: 20px; /* Add space on the right */
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.gradient-circle {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(45deg, #007aff, #6f42c1);
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.company-logo {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, #007aff, #6f42c1);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.greeting-text {
+    font-size: 32px;
+    color: #007aff;
+}
+
+.help-text {
+    font-size: 38px;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* Chatbox Styles */
+.chatbox {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-top: 30px;
+    position: sticky;
+    bottom: 20px;
+    animation: slideInUp 0.5s ease-out;
+    animation-delay: 1s;
+    margin-right: 20px; /* Add space on the right */
+}
+
+.chat-input {
+    border-radius: 25px;
+    padding: 12px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+    width: 100%;
+}
+
+.feature-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.company-logo i {
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.organization-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f8ff;
+    margin-right: 10px;
+}
+
+.chat-container {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.feature-container {
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.user-message {
+    background-color: #f0f7ff;
+    border-radius: 18px 18px 0 18px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: inline-block;
+    max-width: 80%;
+    margin-left: auto;
+    text-align: right;
+}
+
+.bot-message {
+    background-color: #f8f9fa;
+    border-radius: 18px 18px 18px 0;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: inline-block;
+    max-width: 80%;
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.user-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bot-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.bot-typing {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.typing-dot {
+    background-color: #999;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: typing-dot 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing-dot {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-5px);
+    }
+}
+
+.user-icon, .bot-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.user-icon {
+    background-color: #007aff;
+    color: white;
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.bot-icon {
+    background: linear-gradient(45deg, #6f42c1, #007aff);
+    color: white;
+}
+
+.message-wrapper {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.send-btn {
+    background: linear-gradient(45deg, #6f42c1, #007aff);
+    color: white;
+    border: none;
+}
+
+.send-btn:hover {
+    background: linear-gradient(45deg, #5e35b1, #0069d9);
+    color: white;
+}
+
+#messages {
+    max-height: 500px; /* Ensures the chat is scrollable */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+/* Keyframes for animations */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/*ws*/
+
+
+.connection-status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+
+
+   .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .connecting {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .inactive {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }

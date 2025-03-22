@@ -1,111 +1,130 @@
 {% extends "index.html" %}
 {% block dashboard_content %}
 <!-- nav bar begin -->
-  <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-2 col-lg-2 d-md-block bg-light sidebar">
-               <div class="d-flex flex-column py-3">
-                  <!-- Main Profile Header -->
-                  <div class="profile-section d-flex align-items-center px-3 mb-3">
-                     <a href="/dashboard" style="text-decoration: none; color: inherit;">
-                        <div class="gradient-circle-profile me-2"></div>
-                     </a>
-                     <div>
-                        <a href="/dashboard" style="text-decoration: none; color: inherit;">
-                           <p class="mb-0 fw-bold">Fluwd</p>
-                        </a>
-                        <small>Your AI Project Manager</small>
-                     </div>
-                  </div>
-                  <!-- Divider Line -->
-                  <hr class="section-divider">
-                  <!-- Profile Avatar and Location -->
-                  <div class="text-center mt-2">
-                     <div class="profile-section d-flex align-items-center px-3 mb-3 position-relative">
-                        <div class="profile-container me-2 position-relative">
-                           <img src="/static/images/designluch.png" alt="Profile Image" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #9b9b9b;">
-                           <div class="activity-status"></div>
-                        </div>
-                        <div>
-                           <p class="mb-0 fw-bold">Design Lunch</p>
-                           <small>Ottawa, ON</small>
-                        </div>
-                        <!-- Up and Down Icons for Avatar Change -->
-                        <div class="ms-auto">
-                           <i class="bi bi-chevron-up d-block"></i>
-                           <i class="bi bi-chevron-down d-block"></i>
-                        </div>
-                     </div>
-                  </div>
-                  <!-- Divider Line -->
-                  <hr class="section-divider">
-                  <!-- Sidebar Navigation -->
-                  <ul class="nav flex-column px-2">
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="dashboard.html">
-                           <div>
-                              <i class="bi bi-house-door me-2"></i> <span class="fw-bold">Dashboard</span>
-                           </div>
-                           <span class="notification-badge">2</span>
-                        </a>
-                     </li>
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="portfolio.html">
-                           <div>
-                              <i class="bi bi-bar-chart me-2"></i> <span class="fw-bold">Portfolio</span>
-                           </div>
-                        </a>
-                     </li>
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="program.html">
-                           <div>
-                              <i class="bi bi-folder me-2"></i> <span class="fw-bold">Program</span>
-                           </div>
-                        </a>
-                     </li>
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="projects.html">
-                           <div>
-                              <i class="bi bi-list-check me-2"></i> <span class="fw-bold">Projects</span>
-                           </div>
-                        </a>
-                     </li>
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="boards.html">
-                           <div>
-                              <i class="bi bi-chat-left-dots me-2"></i> <span class="fw-bold">Boards</span>
-                           </div>
-                           <span class="notification-badge">5</span>
-                        </a>
-                     </li>
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="inbox.html">
-                           <div>
-                              <i class="bi bi-inbox me-2"></i> <span class="fw-bold">Inbox</span>
-                           </div>
-                           <span class="notification-badge">4</span>
-                        </a>
-                     </li>
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="analytics.html">
-                           <div>
-                              <i class="bi bi-graph-up me-2"></i> <span class="fw-bold">Analytics</span>
-                           </div>
-                           <span class="notification-badge">2</span>
-                        </a>
-                     </li>
-                     <li class="nav-item my-2">
-                        <a class="nav-link d-flex justify-content-between align-items-center" href="settings.html">
-                           <div>
-                              <i class="bi bi-gear me-2"></i> <span class="fw-bold">Settings</span>
-                           </div>
-                           <span class="notification-badge">2</span>
-                        </a>
-                     </li>
-                  </ul>
-               </div>
-            </nav>
-            <!-- End Sidebar -->
+
+ <div>
+    <button id="connectButton">Connect</button>
+    <button id="disconnectButton">Disconnect</button>
+    <div class="debug-logs" id="debugLogs"></div>
+</div>
+    <!-- Sidebar -->
+    <div class="sidebar p-3">
+        <div class="d-flex align-items-center mb-4 p-2">
+            <div class="company-logo d-flex align-items-center justify-content-center">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <div>
+                
+                <div class="logo mb-0">Fluwd</div>
+                <div class="text-muted" style="font-size: 12px;">Your AI Project Manager</div>
+                <div id="status" class="connection-status disconnected">Disconnected</div>
+                
+            </div>
+        </div>
+        
+        <div class="d-flex align-items-center mb-4 p-2">
+            <div class="organization-icon">
+                <i class="far fa-smile text-primary"></i>
+            </div>
+            <div>
+                <div class="fw-bold mb-0">Designluch</div>
+                <div class="text-muted" style="font-size: 12px;">Ottawa, ON</div>
+            </div>
+        </div>
+        
+        <ul class="nav flex-column mt-4">
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </div>
+                    <span class="notification-pill">2</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-briefcase"></i>
+                        Portfolio
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-folder"></i>
+                        Program
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-tasks"></i>
+                        Projects
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-clipboard-list"></i>
+                        Boards
+                    </div>
+                    <span class="notification-pill">5</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-inbox"></i>
+                        Inbox
+                    </div>
+                  <!--  <span class="notification-pill">4</span>-->
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-chart-line"></i>
+                        Analytics
+                    </div>
+                     <!--  <span class="notification-pill">4</span>-->
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <div>
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </div>
+                      <!--  <span class="notification-pill">4</span>-->
+                </a>
+            </li>
+        </ul>
+    </div>
 <!-- nav bar end -->
+    <!-- Header -->
+    <div class="header d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h4 mb-1">Welcome, Alexander</h1>
+            <p class="text-muted mb-0">Today is Saturday, 11th November 2024.</p>
+        </div>
+        <div class="d-flex align-items-center">
+            <div class="me-4 position-relative">
+                <i class="fas fa-bell fs-5"></i>
+            </div>
+            <div class="d-flex align-items-center">
+                <img src="#" alt="Profile" class="profile-pic me-2">
+                <div>
+                    <div class="fw-bold">Ruben Vetrov</div>
+                    <div class="text-muted" style="font-size: 12px;">PMO</div>
+                </div>
+                <i class="fas fa-chevron-down ms-2 text-muted"></i>
+            </div>
+        </div>
+    </div>
 {% block private_content %}{% endblock %}
 {% endblock %}
 
