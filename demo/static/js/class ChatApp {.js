@@ -36,22 +36,32 @@
  * @license MIT
  * @date 22 Mar 2025
  * 
- */
-class FluwdChatApp 
-{
-    constructor(options = {}) 
-    {
+ * 
+ *  * Usage:
+ * const chat = new FluwdChatApp({
+ *     url: 'ws://your-server.com/chat',
+ *     reconnectAttempts: 5,
+ *     reconnectDelay: 3000,
+ *     inactivityTimeout: 300000,  // 5 minutes
+ *     autoReconnect: true,
+ *     debug: false
+ * });
+ * 
+ *  */
+
+class FluwdChatApp {
+    constructor(options = {}) {
         // Default settings
         this.settings = Object.assign({
-                url: '',
-                reconnectAttempts: 5,
-                reconnectDelay: 3000,
-                inactivityTimeout: 30000,
-                autoReconnect: true,
-                debug: false,
-            },
-            options
-        );
+            url: '',
+            reconnectAttempts: 5,
+            reconnectDelay: 3000,
+            maxReconnectDelay: 30000, // Maximum delay between reconnection attempts
+            inactivityTimeout: 30000, // Default inactivity timeout
+            typingGracePeriod: 180000, // 3-minute grace period after typing stops
+            autoReconnect: true,
+            debug: true, // Enable debug mode
+        }, options);
 
         // DOM elements
         this.chatForm = document.getElementById('chat-form');
@@ -66,60 +76,89 @@ class FluwdChatApp
         this.socket = null;
         this.reconnectAttempts = 0;
         this.inactivityTimer = null;
+        this.typingTimer = null; // Timer for typing grace period
 
         // Bind methods
         this.handleSubmit = this.handleSubmit.bind(this);
         this.scrollToBottom = this.scrollToBottom.bind(this);
+        this.handleKeypress = this.handleKeypress.bind(this);
+        this.addBotMessage = this.addBotMessage.bind(this); // Ensure this method is bound
 
         // Initialize
         this.initEventListeners();
+        this.initWebSocket(); // Explicitly call initWebSocket to establish the connection
         setTimeout(this.scrollToBottom, 100);
-        this.initWebSocket();
     }
 
-    initEventListeners() 
-    {
+    initEventListeners() {
         this.chatForm.addEventListener('submit', this.handleSubmit);
+        this.chatInput.addEventListener('keypress', this.handleKeypress); // Listen for keypress
         window.addEventListener('load', () => setTimeout(this.scrollToBottom, 200));
     }
 
-    initWebSocket() 
-    {
-        if (!this.settings.url) return;
-        this.log('Connecting to WebSocket...');
-        this.updateStatus('connecting');
-        this.socket = new WebSocket(this.settings.url);
+    handleKeypress() {
+        // Reset the inactivity timer on every keypress
+        this.resetInactivityTimer();
 
-        this.socket.onopen = () => {
-            this.log('WebSocket connected.');
-            this.updateStatus('connected');
-            this.reconnectAttempts = 0;
-            this.resetInactivityTimer();
-        };
+        // Clear the typing grace period timer
+        clearTimeout(this.typingTimer);
 
-        this.socket.onmessage = (event) => {
-            this.resetInactivityTimer();
-            this.addBotMessage(event.data);
-           
-        };
-
-        this.socket.onclose = () => {
-            this.log('WebSocket disconnected.');
-            this.updateStatus('disconnected');
-            if (this.settings.autoReconnect && this.reconnectAttempts < this.settings.reconnectAttempts) {
-                this.reconnectAttempts++;
-                setTimeout(() => this.initWebSocket(), this.settings.reconnectDelay);
-            }
-        };
-
-        this.socket.onerror = (error) => {
-             this.updateStatus('error');
-            this.log('WebSocket error:', error);
-        };
+        // Start a new grace period timer after typing stops
+        this.typingTimer = setTimeout(() => {
+            this.log('User stopped typing. Starting inactivity timer.');
+            this.resetInactivityTimer(); // Restart the inactivity timer
+        }, this.settings.typingGracePeriod); // 3-minute grace period
     }
 
-    handleSubmit(e) 
-    {
+    initWebSocket() {
+        if (!this.settings.url) {
+            this.log('WebSocket URL is not provided.');
+            return;
+        }
+
+        this.log('Connecting to WebSocket...');
+        this.log('WebSocket URL:', this.settings.url); // Log the WebSocket URL
+        this.updateStatus('connecting');
+
+        try {
+            this.socket = new WebSocket(this.settings.url);
+
+            this.socket.onopen = () => {
+                this.log('WebSocket connected.');
+                this.updateStatus('connected');
+                this.reconnectAttempts = 0;
+                this.resetInactivityTimer();
+            };
+
+            this.socket.onmessage = (event) => {
+                this.log('WebSocket message received:', event.data);
+                this.resetInactivityTimer();
+                this.addBotMessage(event.data);
+            };
+
+            this.socket.onclose = (event) => {
+                this.log('WebSocket disconnected. Code:', event.code, 'Reason:', event.reason);
+                this.updateStatus('disconnected');
+
+                if (this.settings.autoReconnect && this.reconnectAttempts < this.settings.reconnectAttempts) {
+                    const delay = Math.min(this.settings.reconnectDelay * Math.pow(2, this.reconnectAttempts), this.settings.maxReconnectDelay);
+                    this.reconnectAttempts++;
+                    this.log(`Attempting to reconnect in ${delay}ms...`);
+                    setTimeout(() => this.initWebSocket(), delay);
+                }
+            };
+
+            this.socket.onerror = (error) => {
+                this.log('WebSocket error:', error);
+                this.updateStatus('error');
+            };
+        } catch (error) {
+            this.log('WebSocket initialization error:', error);
+            this.updateStatus('error');
+        }
+    }
+
+    handleSubmit(e) {
         e.preventDefault();
         const message = this.chatInput.value.trim();
         if (!message) return;
@@ -132,9 +171,9 @@ class FluwdChatApp
         this.chatInput.value = '';
     }
 
-    sendMessage(message)
-    {
+    sendMessage(message) {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            this.log('Sending message:', message);
             this.socket.send(message);
         } else {
             this.log('WebSocket not connected. Falling back to local processing.');
@@ -142,8 +181,7 @@ class FluwdChatApp
         }
     }
 
-    resetInactivityTimer() 
-    {
+    resetInactivityTimer() {
         clearTimeout(this.inactivityTimer);
         this.inactivityTimer = setTimeout(() => {
             this.log('User inactive. Disconnecting WebSocket.');
@@ -151,8 +189,7 @@ class FluwdChatApp
         }, this.settings.inactivityTimeout);
     }
 
-    transitionToChatView(callback) 
-    {
+    transitionToChatView(callback) {
         this.featureContainer.style.opacity = '0';
         this.welcomeCard.style.opacity = '0';
         setTimeout(() => {
@@ -166,8 +203,7 @@ class FluwdChatApp
         }, 500);
     }
 
-    addUserMessage(message) 
-    {
+    addUserMessage(message) {
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message-wrapper user-container';
         messageDiv.innerHTML = `<div class="user-message">${this.sanitizeHTML(message)}</div><div class="user-icon"><i class="fas fa-user"></i></div>`;
@@ -175,8 +211,7 @@ class FluwdChatApp
         setTimeout(this.scrollToBottom, 50);
     }
 
-    addBotMessage(message) 
-    {
+    addBotMessage(message) {
         this.hideBotTyping();
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message-wrapper bot-container';
@@ -185,8 +220,7 @@ class FluwdChatApp
         setTimeout(this.scrollToBottom, 50);
     }
 
-    showBotTyping() 
-    {
+    showBotTyping() {
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message-wrapper bot-container';
         typingDiv.id = 'bot-typing';
@@ -195,36 +229,27 @@ class FluwdChatApp
         this.scrollToBottom();
     }
 
-    hideBotTyping() 
-    {
+    hideBotTyping() {
         document.getElementById('bot-typing')?.remove();
     }
 
-    scrollToBottom() 
-    {
+    scrollToBottom() {
         requestAnimationFrame(() => {
             this.messages.scrollTop = this.messages.scrollHeight;
         });
     }
 
-    sanitizeHTML(text) 
-    {
+    sanitizeHTML(text) {
         const element = document.createElement('div');
         element.textContent = text;
         return element.innerHTML;
     }
 
-    log(...args) 
-    {
+    log(...args) {
         if (this.settings.debug) console.log('[ChatApp]', ...args);
     }
 
-    /**
-     * Updates the connection status display.
-     * @param {string} status - Connection status ('connected', 'connecting', 'disconnected', 'error')
-     */
-    updateStatus(status) 
-    {
+    updateStatus(status) {
         const statusMap = {
             'connected': {
                 text: 'Connected',
@@ -253,21 +278,5 @@ class FluwdChatApp
         this.statusDisplay.textContent = statusInfo.text;
         this.statusDisplay.className = `connection-status ${statusInfo.className}`;
         console.log(`Status updated: ${status}`);
-    }
-    /**
-     * Log debug information
-     * @param {string} message - Debug message
-     */
-    logDebug(message) 
-    {
-        if (this.config.debug) {
-            console.log(`[WebSocketChat] ${message}`);
-            if (this.debugLogs) {
-                const logEntry = document.createElement('div');
-                logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-                this.debugLogs.appendChild(logEntry);
-                this.debugLogs.scrollTop = this.debugLogs.scrollHeight;
-            }
-        }
     }
 }
