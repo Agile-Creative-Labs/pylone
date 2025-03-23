@@ -38,3 +38,66 @@ TODO: fluwd_chat.js
 - Optionally, support swipe gestures for clearing the chat on mobile.  
 
 Do any of these features interest you? I can implement them in your class. 🚀
+
+
+
+Template Project Charter
+
+
+**Project Charter: Microsoft's Oceanic Love & Fortune Initiative**
+
+**1. Project Information**
+
+* **Project Name:** Microsoft's Oceanic Love & Fortune Initiative
+* **Project Manager:** (To be assigned)
+* **Date Prepared:** (Current Date)
+
+**2. Project Objectives**
+
+* To achieve significant financial gains.
+* To foster and cultivate a sense of "love" (interpreted broadly, potentially as customer loyalty, brand affinity, or team cohesion).
+
+**3. Project Scope**
+
+* The scope of this project is the entirety of the ocean. This includes all physical, biological, and abstract aspects within the oceanic domain.
+* It is to be noted that the scope is very broad and will need to be further defined as the project progresses.
+
+**4. Project Deliverables**
+
+* A collection of construction materials. The exact type and quantity of these materials will be determined during the initial phase of the project.
+
+**5. Timeline**
+
+* The project has a strict timeline of 1 week.
+
+**6. Stakeholders**
+
+* Alexander
+
+**7. Assumptions**
+
+* "Money" and "love" are measurable and attainable objectives within the given scope and timeline.
+* Construction materials can be procured and delivered within the 1-week timeframe.
+* Alexander has the authority to make all necessary decisions.
+* The ocean is a manageable scope within the one week timeline.
+
+**8. Constraints**
+
+* **Time:** The project must be completed within 1 week.
+* **Resources:** Limited resources are implied, given the short timeline.
+* **Scope ambiguity:** The scope of "the ocean" is extremely broad, and will need immediate and strict scope management.
+* The objectives of "money" and "love" are extremely abstract.
+
+**9. Risks**
+
+* The abstract nature of the objectives may lead to difficulty in measuring success.
+* The vast scope of the ocean presents significant logistical and practical challenges.
+* The short timeline may lead to compromised quality.
+* Lack of clear definition of materials may lead to delays.
+
+**10. Approval**
+
+* (Signature) _________________________
+* (Name) Alexander
+* (Date) _________________________
+

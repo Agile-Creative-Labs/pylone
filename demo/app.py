@@ -47,7 +47,7 @@ from wsgiref.simple_server import make_server
 #nlp test
 from pylone.chat_handler import ChatHandler  # Import the ChatHandler
 import spacy  # Import SpaCy for NLP
-
+from pylone.chatbot import FluwdChatBot
 
 # Determine the path to the static directory
 static_dir = os.path.join(os.path.dirname(__file__), 'static')
@@ -70,15 +70,19 @@ async def chat_handler(websocket):
 base_app.add_websocket_route("/chat", chat_handler)
 '''
 
+
 # Load a SpaCy model
 nlp = spacy.load("en_core_web_sm")
 
 # Initialize the ChatHandler with a greeting and the NLP model
-chat_handler_instance = ChatHandler(greeting=config.CHAT_GREETING, nlp_model=nlp)
+# original chat_handler_instance = ChatHandler(greeting=config.CHAT_GREETING, nlp_model=nlp)
+chat_handler_instance =FluwdChatBot(greeting=config.CHAT_GREETING)
 
 # Define a WebSocket route using the ChatHandler instance
 async def chat_route(websocket):
     await chat_handler_instance.handle_chat(websocket)
+
+
 
 # Add the WebSocket route to the base app
 base_app.add_websocket_route("/chat", chat_route)
