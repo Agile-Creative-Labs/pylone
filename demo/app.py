@@ -44,6 +44,9 @@ from demo.middlewares.staticfile_middleware import StaticFileMiddleware
 from demo.settings import config
 
 from wsgiref.simple_server import make_server
+#nlp test
+from pylone.chat_handler import ChatHandler  # Import the ChatHandler
+import spacy  # Import SpaCy for NLP
 
 
 # Determine the path to the static directory
@@ -56,14 +59,29 @@ base_app = App(router)
 # Setup the app (call setup before wrapping with middlewares)
 base_app.setup(router)
 
-# Example WebSocket route
+# WebSocket route
+'''
 async def chat_handler(websocket):
-    await websocket.send("Welcome to the chat!")
+    await websocket.send(config.CHAT_GREETING)
     async for message in websocket:
         await websocket.send(f"Echo: {message}")
 
 # Add WebSocket route
 base_app.add_websocket_route("/chat", chat_handler)
+'''
+
+# Load a SpaCy model
+nlp = spacy.load("en_core_web_sm")
+
+# Initialize the ChatHandler with a greeting and the NLP model
+chat_handler_instance = ChatHandler(greeting=config.CHAT_GREETING, nlp_model=nlp)
+
+# Define a WebSocket route using the ChatHandler instance
+async def chat_route(websocket):
+    await chat_handler_instance.handle_chat(websocket)
+
+# Add the WebSocket route to the base app
+base_app.add_websocket_route("/chat", chat_route)
 
 # Wrap the app with middlewares for WSGI processing
 wsgi_app = LoggingMiddleware(base_app)

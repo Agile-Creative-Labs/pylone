@@ -1,0 +1,40 @@
+
+TODO: fluwd_chat.js
+
+### **1. Connection Status Indicator**  
+- Display a visual indicator (e.g., a small green/red dot) to show whether the WebSocket is connected or disconnected.  
+- This helps users know when they might be experiencing network issues.  
+
+### **2. Message Timestamps**  
+- Add timestamps to user and bot messages to provide context on when messages were sent/received.  
+- Example: `10:45 AM - User: Hello!`  
+
+### **3. Local Message Storage (Session Storage)**  
+- Store messages in `sessionStorage` so they persist during a page refresh.  
+- This improves the user experience when navigating away and back.  
+
+### **4. Typing Indicator for User**  
+- Add a "typing..." indicator when the user is actively typing to give a better UX feel.  
+- Optionally, disable the send button until the user has entered text.  
+
+### **5. Command Shortcuts**  
+- Implement text-based commands like:  
+  - `/clear` → Clears chat history  
+  - `/help` → Displays available commands  
+
+### **6. Markdown Support for Rich Formatting**  
+- Support basic Markdown (bold, italics, links) in bot responses for improved readability.  
+
+### **7. Sound Notifications for Messages**  
+- Play a subtle notification sound when a new bot response is received.  
+- Useful when users are multitasking.  
+
+### **8. Connection Logs (For Debugging)**  
+- Keep an internal log of WebSocket connection attempts, failures, and messages sent/received.  
+- Helps debug connection issues when `debug: true` is enabled.  
+
+### **9. Adaptive UI for Mobile & Desktop**  
+- Improve chat styling to look great on both mobile and desktop, with responsive design.  
+- Optionally, support swipe gestures for clearing the chat on mobile.  
+
+Do any of these features interest you? I can implement them in your class. 🚀

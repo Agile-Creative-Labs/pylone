@@ -26,6 +26,7 @@ from pylone.settings import Config  # Import the base Config class
 class DevelopmentConfig(Config):
     """Configuration for the demo app."""
     DEBUG = True
+    CHAT_GREETING ='i LOVE YOU'
     DB_NAME = os.getenv('DB_NAME', 'demo.db')  # Default to 'demo.db' if not set
     DATABASE_URI = f"sqlite:///{DB_NAME}"  # Use DB_NAME to construct the DATABASE_URI
     ALLOWED_PATHS = [
