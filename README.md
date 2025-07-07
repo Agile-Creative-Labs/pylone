@@ -129,7 +129,7 @@ Built with ❤️ by [Agile Creative Labs Inc.]
 
 ## Contact
 For questions or feedback, feel free to reach out:
-Email: pylone@agilecreativelabs.ca
+Email: pylone@agilecreativelabs.com
 
 
 
